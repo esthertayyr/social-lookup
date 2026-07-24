@@ -45,7 +45,14 @@ async function checkEmailOnTwitter(email) {
     });
     clearTimeout(timeout);
 
-    const data = await response.json();
+    const text = await response.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      return { platform: 'twitter', found: false, method: 'email', note: 'Could not check (blocked)' };
+    }
+
     return {
       platform: 'twitter',
       found: data.taken === true,

@@ -3,185 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SocialTrace - Find Anyone Across Social Media</title>
-    <meta name="description" content="Search for anyone across Instagram, TikTok, Twitter/X, Facebook, and Threads. Find social media profiles by username, email, or phone number.">
+    <title>SocialTrace — Find Anyone Across Social Media</title>
+    <meta name="description" content="Search for anyone across Instagram, TikTok, Twitter/X, Facebook, and Threads. View profiles anonymously or open in app.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <!-- REPLACE THIS WITH YOUR GOOGLE ADSENSE CODE -->
-    <!-- Get it from: https://www.google.com/adsense → Sites → Add site → copy the script tag -->
+    <!-- REPLACE WITH YOUR ADSENSE CODE -->
     <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
 
     <style>
+        :root {
+            --bg: #fafbfc;
+            --surface: #ffffff;
+            --fg: #111827;
+            --muted: #6b7280;
+            --subtle: #e5e7eb;
+            --accent: #0ea5e9;
+            --accent-hover: #0284c7;
+            --found: #10b981;
+            --notfound: #d1d5db;
+            --linked: #8b5cf6;
+            --radius: 6px;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0f0f1a;
-            color: #e0e0e0;
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             -webkit-text-size-adjust: 100%;
+        }
+
+        /* Subtle dot grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(circle, #d1d5db 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
         }
 
         /* --- ADS --- */
         .ad-slot {
+            position: relative;
+            z-index: 1;
             width: 100%;
-            background: #1a1a2e;
-            border: 1px solid #2a2a4a;
-            padding: 10px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--subtle);
             text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-        }
-
-        .ad-slot-top {
             min-height: 90px;
-            border-bottom: 1px solid #2a2a4a;
-            border-radius: 0;
         }
 
         .ad-slot-mid {
             min-height: 250px;
-            border-radius: 12px;
-            margin: 20px 0;
+            border: 1px solid var(--subtle);
+            border-radius: var(--radius);
+            margin: 2rem 0;
+            display: none;
+            background: var(--surface);
         }
+
+        .ad-slot-mid.visible { display: flex; }
 
         .ad-slot-sidebar {
             width: 160px;
             min-height: 600px;
-            border-radius: 8px;
+            border: 1px solid var(--subtle);
+            border-radius: var(--radius);
+            background: var(--surface);
             position: sticky;
             top: 20px;
         }
 
         .ad-slot-mobile {
             display: none;
-            min-height: 100px;
-            border-radius: 8px;
-            margin: 16px 0;
+            min-height: 90px;
+            border: 1px solid var(--subtle);
+            border-radius: var(--radius);
+            background: var(--surface);
+            margin: 1rem 1.5rem;
         }
 
         .ad-label {
-            color: #444;
-            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--notfound);
+            font-size: 0.6rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.12em;
         }
 
-        /* --- HEADER --- */
-        .header {
+        /* --- HERO --- */
+        .hero {
+            position: relative;
+            z-index: 1;
             text-align: center;
-            padding: 40px 20px 20px;
+            padding: 4.5rem 2rem 1.5rem;
         }
 
-        .header h1 {
-            font-size: 2.5rem;
+        .hero .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1.25rem;
+        }
+
+        .brand-mark {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-mark svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: #fff;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .brand-name {
+            font-size: 1.4rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
+            letter-spacing: -0.03em;
+            color: var(--fg);
         }
 
-        .header p { color: #888; font-size: 1.1rem; }
+        .hero h1 {
+            font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.035em;
+            line-height: 1.15;
+            color: var(--fg);
+            margin-bottom: 0.6rem;
+        }
+
+        .hero p {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--muted);
+            max-width: 380px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
 
         /* --- SEARCH --- */
         .search-section {
-            max-width: 700px;
-            margin: 30px auto;
-            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+            max-width: 540px;
+            width: 100%;
+            margin: 1.75rem auto;
+            padding: 0 1.5rem;
         }
 
-        .search-box {
+        .search-bar {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            background: var(--surface);
+            border: 1.5px solid var(--subtle);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        .search-box input {
+        .search-bar:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.08);
+        }
+
+        .search-bar input {
             flex: 1;
-            padding: 16px 24px;
-            border-radius: 50px;
-            border: 2px solid #2a2a4a;
-            background: #1a1a2e;
-            color: #fff;
-            font-size: 1rem;
+            padding: 0.9rem 1.2rem;
+            border: none;
+            background: transparent;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--fg);
             outline: none;
-            transition: border-color 0.3s;
         }
 
-        .search-box input:focus { border-color: #667eea; }
+        .search-bar input::placeholder { color: var(--muted); font-weight: 300; }
 
-        .search-box button {
-            padding: 16px 32px;
-            border-radius: 50px;
+        .search-bar button {
+            padding: 0.9rem 1.4rem;
             border: none;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: var(--accent);
             color: #fff;
-            font-size: 1rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, opacity 0.2s;
+            transition: background 0.2s;
             white-space: nowrap;
         }
 
-        .search-box button:hover { transform: scale(1.03); opacity: 0.9; }
-        .search-box button:active { transform: scale(0.97); }
+        .search-bar button:hover { background: var(--accent-hover); }
 
-        .search-mode {
+        .search-tabs {
             display: flex;
             justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
+            gap: 4px;
+            margin-top: 12px;
         }
 
-        .search-mode button {
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 1px solid #2a2a4a;
-            background: transparent;
-            color: #888;
-            font-size: 0.8rem;
+        .search-tabs button {
+            padding: 6px 14px;
+            border: 1.5px solid var(--subtle);
+            border-radius: 6px;
+            background: var(--surface);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            font-weight: 500;
+            color: var(--muted);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
         }
 
-        .search-mode button.active {
-            background: #667eea22;
-            border-color: #667eea;
-            color: #667eea;
+        .search-tabs button.active {
+            background: var(--fg);
+            border-color: var(--fg);
+            color: #fff;
         }
 
-        .search-options {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
+        .search-tabs button:hover:not(.active) {
+            border-color: var(--accent);
+            color: var(--accent);
         }
-
-        .search-options label {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 6px 12px;
-            background: #1a1a2e;
-            border: 1px solid #2a2a4a;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            cursor: pointer;
-        }
-
-        .search-options label:hover { border-color: #667eea; }
-        .search-options input[type="checkbox"] { accent-color: #667eea; }
 
         /* --- LAYOUT --- */
         .main-layout {
+            position: relative;
+            z-index: 1;
             display: flex;
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 20px;
-            gap: 20px;
+            max-width: 1100px;
+            width: 100%;
+            margin: 1.5rem auto;
+            padding: 0 1.5rem;
+            gap: 1.5rem;
+            flex: 1;
         }
 
         .sidebar { width: 160px; flex-shrink: 0; }
@@ -191,207 +267,302 @@
         .results-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 16px;
+            gap: 12px;
         }
 
         .result-card {
-            background: #1a1a2e;
-            border: 1px solid #2a2a4a;
-            border-radius: 12px;
-            padding: 20px;
-            transition: transform 0.2s, border-color 0.2s;
+            background: var(--surface);
+            border: 1.5px solid var(--subtle);
+            border-radius: 10px;
+            padding: 1.25rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        .result-card:hover { transform: translateY(-2px); border-color: #667eea; }
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--notfound);
+            transition: background 0.2s;
+        }
+
+        .result-card.found::before { background: var(--found); }
+        .result-card.linked::before { background: var(--linked); }
+
+        .result-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.06);
+        }
 
         .result-card .platform-header {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .platform-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            font-weight: bold;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
             color: #fff;
             flex-shrink: 0;
         }
 
-        .platform-icon.instagram { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
-        .platform-icon.tiktok { background: #000; border: 1px solid #333; }
-        .platform-icon.twitter { background: #1a1a1a; border: 1px solid #333; }
+        .platform-icon.instagram { background: #e1306c; }
+        .platform-icon.tiktok { background: #111; }
+        .platform-icon.twitter { background: #111; }
         .platform-icon.facebook { background: #1877f2; }
-        .platform-icon.threads { background: #000; border: 1px solid #333; }
+        .platform-icon.threads { background: #111; }
 
-        .platform-name { font-weight: 600; font-size: 0.95rem; }
-        .platform-status { font-size: 0.75rem; }
-        .platform-status.found { color: #4ade80; }
-        .platform-status.not-found { color: #f87171; }
-        .platform-status.linked { color: #60a5fa; }
-        .platform-status.unsupported { color: #666; }
+        .platform-name { font-weight: 600; font-size: 0.88rem; }
 
-        .result-card .username { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 4px; }
-        .result-card .note { font-size: 0.8rem; color: #888; margin-bottom: 12px; }
+        .platform-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .platform-status.found { color: var(--found); }
+        .platform-status.not-found { color: var(--muted); }
+        .platform-status.linked { color: var(--linked); }
+        .platform-status.unsupported { color: var(--notfound); }
+
+        .result-card .username {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--fg);
+            margin-bottom: 4px;
+        }
+
+        .result-card .note {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
 
         .link-badge {
             display: inline-block;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-            background: #60a5fa22;
-            color: #60a5fa;
-            border: 1px solid #60a5fa44;
-        }
-
-        .method-badge {
-            display: inline-block;
             padding: 2px 8px;
-            border-radius: 8px;
-            font-size: 0.65rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.58rem;
             font-weight: 600;
-            margin-bottom: 8px;
             text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 10px;
+            background: #ede9fe;
+            color: var(--linked);
         }
 
-        .method-badge.google { background: #fbbf2422; color: #fbbf24; border: 1px solid #fbbf2444; }
-        .method-badge.cached { background: #667eea22; color: #667eea; border: 1px solid #667eea44; }
-        .method-badge.client { background: #a78bfa22; color: #a78bfa; border: 1px solid #a78bfa44; }
+        .result-actions {
+            display: flex;
+            gap: 6px;
+        }
 
-        .result-card .view-btn {
+        .result-actions a,
+        .result-actions span {
+            flex: 1;
             display: block;
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #2a2a4a;
-            background: transparent;
-            color: #667eea;
-            font-size: 0.85rem;
+            padding: 9px 8px;
+            border-radius: 6px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.72rem;
             font-weight: 600;
-            cursor: pointer;
             text-decoration: none;
             text-align: center;
-            transition: background 0.2s;
+            transition: all 0.15s;
         }
 
-        .result-card .view-btn:hover { background: #667eea22; }
-        .result-card.not-found { opacity: 0.5; }
-        .result-card.not-found .view-btn { color: #666; border-color: #1a1a2e; cursor: default; pointer-events: none; }
+        .result-actions .btn-app {
+            background: var(--bg);
+            color: var(--fg);
+            border: 1px solid var(--subtle);
+        }
 
-        .loading { text-align: center; padding: 60px 20px; display: none; }
+        .result-actions .btn-app:hover {
+            background: var(--fg);
+            color: #fff;
+            border-color: var(--fg);
+        }
+
+        .result-actions .btn-anon {
+            background: var(--accent);
+            color: #fff;
+            border: 1px solid var(--accent);
+        }
+
+        .result-actions .btn-anon:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+
+        .result-actions .btn-disabled {
+            background: var(--bg);
+            color: var(--notfound);
+            border: 1px solid var(--subtle);
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .result-card.not-found { opacity: 0.45; }
+
+        /* --- LOADING --- */
+        .loading { text-align: center; padding: 4rem 2rem; display: none; }
         .loading.visible { display: block; }
 
         .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #2a2a4a;
-            border-top-color: #667eea;
+            width: 28px;
+            height: 28px;
+            border: 2.5px solid var(--subtle);
+            border-top-color: var(--accent);
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 16px;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto 1rem;
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
-        .loading p { color: #888; font-size: 0.9rem; }
 
-        .empty-state { text-align: center; padding: 80px 20px; color: #666; }
-        .empty-state .icon { font-size: 3rem; margin-bottom: 16px; }
+        .loading p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--muted);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 5rem 2rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+            font-weight: 300;
+        }
 
         .variation-section {
-            margin-top: 30px;
-            border-top: 1px solid #2a2a4a;
-            padding-top: 20px;
+            margin-top: 2rem;
         }
-        .variation-section h3 { font-size: 0.9rem; color: #888; margin-bottom: 12px; }
 
+        .variation-section h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--subtle);
+        }
+
+        /* --- FOOTER --- */
         .footer {
-            text-align: center;
-            padding: 40px 20px;
-            color: #555;
-            font-size: 0.8rem;
-            border-top: 1px solid #1a1a2e;
-            margin-top: 60px;
+            position: relative;
+            z-index: 1;
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--subtle);
+            background: var(--surface);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .footer a { color: #667eea; text-decoration: none; }
-        .footer a:hover { text-decoration: underline; }
+        .footer p {
+            font-size: 0.72rem;
+            color: var(--muted);
+        }
+
+        .footer .links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer a {
+            font-size: 0.72rem;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .footer a:hover { color: var(--accent); }
 
         /* --- MOBILE --- */
         @media (max-width: 768px) {
-            .header { padding: 24px 16px 12px; }
-            .header h1 { font-size: 1.8rem; }
-            .header p { font-size: 0.95rem; }
-            .search-section { padding: 0 12px; margin: 20px auto; }
-            .search-box { flex-direction: column; }
-            .search-box input { padding: 14px 20px; }
-            .search-box button { width: 100%; padding: 14px; }
-            .search-mode button { padding: 6px 12px; font-size: 0.75rem; }
-            .search-options label { padding: 5px 10px; font-size: 0.8rem; }
+            .hero { padding: 3rem 1.5rem 1rem; }
+            .hero h1 { font-size: 1.7rem; }
+            .search-section { padding: 0 1rem; }
+            .search-bar input { padding: 0.8rem 1rem; font-size: 0.85rem; }
+            .search-bar button { padding: 0.8rem 1rem; font-size: 0.8rem; }
+            .search-tabs button { padding: 5px 10px; font-size: 0.6rem; }
             .sidebar { display: none; }
-            .main-layout { padding: 0 12px; }
+            .main-layout { padding: 0 1rem; }
             .results-grid { grid-template-columns: 1fr; }
             .ad-slot-mobile { display: flex; }
-            .ad-slot-top { min-height: 60px; }
+            .ad-slot { min-height: 60px; }
+            .footer { flex-direction: column; text-align: center; padding: 1.25rem 1.5rem; }
         }
 
         @media (max-width: 400px) {
-            .header h1 { font-size: 1.5rem; }
-            .search-mode { gap: 4px; }
-            .search-mode button { padding: 5px 10px; font-size: 0.7rem; }
+            .hero h1 { font-size: 1.4rem; }
+            .brand-name { font-size: 1.1rem; }
+            .search-tabs { flex-wrap: wrap; gap: 4px; }
         }
     </style>
 </head>
 <body>
 
     <!-- Top Ad -->
-    <div class="ad-slot ad-slot-top">
-        <!-- REPLACE with AdSense: <ins class="adsbygoogle" data-ad-client="ca-pub-XXX" data-ad-slot="XXX" data-ad-format="horizontal" data-full-width-responsive="true"></ins> -->
+    <div class="ad-slot">
         <span class="ad-label">Advertisement</span>
     </div>
 
-    <div class="header">
-        <h1>SocialTrace</h1>
-        <p>Find anyone across social media platforms instantly.</p>
+    <!-- Hero -->
+    <div class="hero">
+        <div class="brand">
+            <div class="brand-mark">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <span class="brand-name">SocialTrace</span>
+        </div>
+        <h1>Find anyone across<br>social media</h1>
+        <p>Search once. See everywhere. Open in app or browse anonymously.</p>
     </div>
 
+    <!-- Search -->
     <div class="search-section">
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Enter a @username..." autocomplete="off">
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Username, name, email, or phone..." autocomplete="off">
             <button onclick="performSearch()">Search</button>
         </div>
-        <div class="search-mode">
-            <button class="active" id="modeUsername" onclick="setMode('username')">Username</button>
-            <button id="modeVariations" onclick="setMode('variations')">Name</button>
-            <button id="modeEmail" onclick="setMode('email')">Email</button>
-            <button id="modePhone" onclick="setMode('phone')">Phone</button>
-        </div>
-        <div class="search-options" id="platformCheckboxes">
-            <label><input type="checkbox" checked data-platform="instagram"> Instagram</label>
-            <label><input type="checkbox" checked data-platform="tiktok"> TikTok</label>
-            <label><input type="checkbox" checked data-platform="twitter"> X</label>
-            <label><input type="checkbox" checked data-platform="facebook"> Facebook</label>
-            <label><input type="checkbox" checked data-platform="threads"> Threads</label>
+        <div class="search-tabs">
+            <button class="active" id="modeUsername" onclick="setMode('username')">username</button>
+            <button id="modeVariations" onclick="setMode('variations')">name</button>
+            <button id="modeEmail" onclick="setMode('email')">email</button>
+            <button id="modePhone" onclick="setMode('phone')">phone</button>
         </div>
     </div>
 
-    <!-- Mobile Ad (shows only on phones) -->
+    <!-- Mobile Ad -->
     <div class="ad-slot ad-slot-mobile">
-        <!-- REPLACE with AdSense mobile banner -->
         <span class="ad-label">Advertisement</span>
     </div>
 
+    <!-- Main -->
     <div class="main-layout">
         <div class="sidebar">
             <div class="ad-slot ad-slot-sidebar">
-                <!-- REPLACE with AdSense sidebar -->
                 <span class="ad-label">Ad</span>
             </div>
         </div>
@@ -399,55 +570,74 @@
         <div class="results-section">
             <div class="loading" id="loading">
                 <div class="spinner"></div>
-                <p id="loadingText">Checking profiles...</p>
+                <p id="loadingText">Scanning platforms...</p>
             </div>
 
             <div class="empty-state" id="emptyState">
-                <div class="icon">&#128269;</div>
-                <p>Search by username, full name, email, or phone number</p>
+                Enter a username, name, email, or phone to find social profiles
             </div>
 
             <div id="resultsContainer"></div>
 
-            <!-- Mid-content Ad (shows after results) -->
-            <div class="ad-slot ad-slot-mid" id="adMid" style="display:none;">
-                <!-- REPLACE with AdSense rectangle -->
+            <div class="ad-slot ad-slot-mid" id="adMid">
                 <span class="ad-label">Advertisement</span>
             </div>
         </div>
 
         <div class="sidebar">
             <div class="ad-slot ad-slot-sidebar">
-                <!-- REPLACE with AdSense sidebar -->
                 <span class="ad-label">Ad</span>
             </div>
         </div>
     </div>
 
+    <!-- Footer -->
     <div class="footer">
-        <p>&copy; 2025 SocialTrace. Searches publicly available information only.</p>
-        <p style="margin-top: 8px;"><a href="/privacy.html">Privacy Policy</a> | <a href="/terms.html">Terms of Service</a></p>
+        <p>SocialTrace is not affiliated with Instagram, TikTok, X/Twitter, Facebook, Threads, or Meta Platforms Inc.</p>
+        <div class="links">
+            <a href="/privacy.html">Privacy</a>
+            <a href="/terms.html">Terms</a>
+        </div>
     </div>
 
     <script>
         let searchMode = 'username';
+        const ALL_PLATFORMS = ['instagram', 'tiktok', 'twitter', 'facebook', 'threads'];
 
         const platformMeta = {
-            instagram: { name: 'Instagram', icon: 'IG', iconClass: 'instagram', url: 'https://www.instagram.com/{u}/' },
-            tiktok: { name: 'TikTok', icon: 'TT', iconClass: 'tiktok', url: 'https://www.tiktok.com/@{u}' },
-            twitter: { name: 'X / Twitter', icon: 'X', iconClass: 'twitter', url: 'https://x.com/{u}' },
-            facebook: { name: 'Facebook', icon: 'FB', iconClass: 'facebook', url: 'https://www.facebook.com/{u}' },
-            threads: { name: 'Threads', icon: 'TH', iconClass: 'threads', url: 'https://www.threads.net/@{u}' },
+            instagram: {
+                name: 'Instagram', icon: 'IG', iconClass: 'instagram',
+                appUrl: 'https://www.instagram.com/{u}/',
+                anonUrl: 'https://imginn.com/{u}',
+            },
+            tiktok: {
+                name: 'TikTok', icon: 'TT', iconClass: 'tiktok',
+                appUrl: 'https://www.tiktok.com/@{u}',
+                anonUrl: 'https://www.tiktok.com/@{u}',
+            },
+            twitter: {
+                name: 'X / Twitter', icon: 'X', iconClass: 'twitter',
+                appUrl: 'https://x.com/{u}',
+                anonUrl: 'https://nitter.net/{u}',
+            },
+            facebook: {
+                name: 'Facebook', icon: 'FB', iconClass: 'facebook',
+                appUrl: 'https://www.facebook.com/{u}',
+                anonUrl: 'https://www.facebook.com/{u}',
+            },
+            threads: {
+                name: 'Threads', icon: 'TH', iconClass: 'threads',
+                appUrl: 'https://www.threads.net/@{u}',
+                anonUrl: 'https://www.threads.net/@{u}',
+            },
         };
 
-        // Client-side check (user's browser IP, not server)
         function clientCheck(platform, username) {
             return new Promise((resolve) => {
                 const timer = setTimeout(() => resolve({ platform, username, found: false, fallback: true }), 5000);
-
                 if (platform === 'tiktok') {
                     fetch(`https://www.tiktok.com/oembed?url=https://www.tiktok.com/@${username}`)
-                        .then(r => { clearTimeout(timer); resolve({ platform, username, found: r.status === 200, url: `https://www.tiktok.com/@${username}`, method: 'client' }); })
+                        .then(r => { clearTimeout(timer); resolve({ platform, username, found: r.status === 200, method: 'client' }); })
                         .catch(() => { clearTimeout(timer); resolve({ platform, username, found: false, fallback: true }); });
                 } else {
                     clearTimeout(timer);
@@ -458,46 +648,49 @@
 
         function setMode(mode) {
             searchMode = mode;
-            document.querySelectorAll('.search-mode button').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.search-tabs button').forEach(b => b.classList.remove('active'));
             document.getElementById('mode' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('active');
-
-            const input = document.getElementById('searchInput');
-            const boxes = document.getElementById('platformCheckboxes');
-
-            const placeholders = { username: 'Enter a @username...', variations: 'Enter a full name (e.g. Esther Tay)...', email: 'Enter an email address...', phone: 'Enter phone (with country code, e.g. +65...)' };
-            input.placeholder = placeholders[mode];
-            boxes.style.display = (mode === 'email' || mode === 'phone') ? 'none' : 'flex';
-        }
-
-        function getSelectedPlatforms() {
-            return [...document.querySelectorAll('.search-options input:checked')].map(cb => cb.dataset.platform);
+            const placeholders = {
+                username: 'Enter @username...',
+                variations: 'Enter full name (e.g. Esther Tay)...',
+                email: 'Enter email address...',
+                phone: 'Enter phone with country code...'
+            };
+            document.getElementById('searchInput').placeholder = placeholders[mode];
         }
 
         function createCard(r) {
             const meta = platformMeta[r.platform];
             let statusClass = 'not-found', statusText = 'Not found';
+            let cardExtra = 'not-found';
 
-            if (r.unsupported) { statusClass = 'unsupported'; statusText = 'Not supported'; }
-            else if (r.inferredFromLink) { statusClass = 'linked'; statusText = 'Linked'; }
-            else if (r.found) { statusClass = 'found'; statusText = 'Found'; }
-
-            const cardClass = r.found ? '' : 'not-found';
-            const methodBadge = r.method === 'google' ? '<span class="method-badge google">via Google</span>' :
-                               r.method === 'client' ? '<span class="method-badge client">verified</span>' :
-                               r.fromCache ? '<span class="method-badge cached">cached</span>' : '';
+            if (r.unsupported) { statusClass = 'unsupported'; statusText = 'Unavailable'; }
+            else if (r.inferredFromLink) { statusClass = 'linked'; statusText = 'Linked'; cardExtra = 'linked'; }
+            else if (r.found) { statusClass = 'found'; statusText = 'Found'; cardExtra = 'found'; }
 
             const linkBadge = r.inferredFromLink ? `<div class="link-badge">Linked from ${platformMeta[r.linkedFrom]?.name || ''}</div>` :
                              r.linkNote ? `<div class="link-badge">${r.linkNote}</div>` : '';
-
             const note = r.note ? `<div class="note">${r.note}</div>` : '';
             const uname = r.username ? `<div class="username">@${r.username}</div>` : '';
-            const url = r.url || (r.username ? meta.url.replace('{u}', r.username) : null);
 
-            const btn = (url && r.found) ? `<a href="${url}" target="_blank" rel="noopener" class="view-btn">View Profile</a>` :
-                       (r.found && !url) ? `<span class="view-btn" style="color:#4ade80;border-color:#4ade8044">Account Exists</span>` :
-                       `<span class="view-btn">Not Available</span>`;
+            let actions;
+            if (r.found && r.username) {
+                const appUrl = meta.appUrl.replace('{u}', r.username);
+                const anonUrl = meta.anonUrl.replace('{u}', r.username);
+                actions = `<div class="result-actions"><a href="${appUrl}" target="_blank" rel="noopener" class="btn-app">Open</a><a href="${anonUrl}" target="_blank" rel="noopener" class="btn-anon">Anonymous</a></div>`;
+            } else if (r.found && !r.username) {
+                actions = `<div class="result-actions"><span class="btn-disabled">Account exists</span></div>`;
+            } else {
+                actions = `<div class="result-actions"><span class="btn-disabled">Unavailable</span></div>`;
+            }
 
-            return `<div class="result-card ${cardClass}"><div class="platform-header"><div class="platform-icon ${meta.iconClass}">${meta.icon}</div><div><div class="platform-name">${meta.name}</div><div class="platform-status ${statusClass}">${statusText}</div></div></div>${uname}${methodBadge}${linkBadge}${note}${btn}</div>`;
+            return `<div class="result-card ${cardExtra}"><div class="platform-header"><div class="platform-icon ${meta.iconClass}">${meta.icon}</div><div><div class="platform-name">${meta.name}</div><div class="platform-status ${statusClass}">${statusText}</div></div></div>${uname}${linkBadge}${note}${actions}</div>`;
+        }
+
+        async function safeJson(res) {
+            const text = await res.text();
+            try { return JSON.parse(text); }
+            catch { throw new Error('Server returned an invalid response. Try again.'); }
         }
 
         async function performSearch() {
@@ -512,78 +705,70 @@
 
             emptyState.style.display = 'none';
             container.innerHTML = '';
-            adMid.style.display = 'none';
+            adMid.classList.remove('visible');
             loading.classList.add('visible');
 
             try {
                 let results = [];
 
                 if (searchMode === 'username') {
-                    loadingText.textContent = 'Checking profiles...';
-                    const platforms = getSelectedPlatforms();
+                    loadingText.textContent = 'Scanning platforms...';
                     const clean = input.replace(/^@/, '').toLowerCase();
 
-                    // Client-side first
-                    const clientResults = await Promise.all(platforms.map(p => clientCheck(p, clean)));
-
-                    // Server for those that need fallback
+                    const clientResults = await Promise.all(ALL_PLATFORMS.map(p => clientCheck(p, clean)));
                     const needServer = clientResults.filter(r => r.fallback).map(r => r.platform);
+
                     let serverResults = [];
                     if (needServer.length > 0) {
                         const res = await fetch('/api/lookup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: clean, platforms: needServer }) });
-                        const data = await res.json();
-                        serverResults = data.results;
+                        const data = await safeJson(res);
+                        serverResults = data.results || [];
                     }
 
-                    results = platforms.map(p => {
+                    results = ALL_PLATFORMS.map(p => {
                         const c = clientResults.find(r => r.platform === p);
                         if (c && !c.fallback) return c;
                         return serverResults.find(r => r.platform === p) || c;
                     });
 
-                    // IG → Threads link
                     const ig = results.find(r => r.platform === 'instagram' && r.found);
                     if (ig) {
                         const th = results.find(r => r.platform === 'threads');
                         if (th && !th.found) { th.found = true; th.inferredFromLink = true; th.linkedFrom = 'instagram'; }
-                        else if (th) { th.linkNote = 'Same person as Instagram'; }
+                        else if (th) { th.linkNote = 'Same as Instagram'; }
                     }
 
                 } else if (searchMode === 'variations') {
-                    loadingText.textContent = 'Trying name variations...';
-                    const platforms = getSelectedPlatforms();
-                    const res = await fetch('/api/lookup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: input.replace(/\s+/g, '').toLowerCase(), platforms }) });
-                    const data = await res.json();
-
-                    // Also try dot and underscore variations
+                    loadingText.textContent = 'Trying variations...';
                     const parts = input.toLowerCase().split(/\s+/);
-                    const variations = [...new Set([parts.join(''), parts.join('.'), parts.join('_'), parts.reverse().join('')])];
+                    const variations = [...new Set([parts.join(''), parts.join('.'), parts.join('_'), [...parts].reverse().join('')])];
 
                     let html = '';
                     for (const v of variations) {
-                        const vRes = await fetch('/api/lookup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: v, platforms }) });
-                        const vData = await vRes.json();
-                        const found = vData.results.filter(r => r.found);
-                        const notFound = vData.results.filter(r => !r.found);
+                        const vRes = await fetch('/api/lookup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: v, platforms: ALL_PLATFORMS }) });
+                        const vData = await safeJson(vRes);
+                        const vResults = vData.results || [];
+                        const found = vResults.filter(r => r.found);
+                        const notFound = vResults.filter(r => !r.found);
                         html += `<div class="variation-section"><h3>@${v}</h3><div class="results-grid">${[...found, ...notFound].map(createCard).join('')}</div></div>`;
                     }
 
                     loading.classList.remove('visible');
                     container.innerHTML = html;
-                    adMid.style.display = 'flex';
+                    adMid.classList.add('visible');
                     return;
 
                 } else if (searchMode === 'email') {
                     loadingText.textContent = 'Checking email...';
                     const res = await fetch('/api/lookup-email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: input }) });
-                    const data = await res.json();
-                    results = data.results;
+                    const data = await safeJson(res);
+                    results = data.results || [];
 
                 } else if (searchMode === 'phone') {
                     loadingText.textContent = 'Checking phone...';
                     const res = await fetch('/api/lookup-phone', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: input }) });
-                    const data = await res.json();
-                    results = data.results;
+                    const data = await safeJson(res);
+                    results = data.results || [];
                 }
 
                 const found = results.filter(r => r.found);
@@ -591,11 +776,11 @@
                 container.innerHTML = `<div class="results-grid">${[...found, ...notFound].map(createCard).join('')}</div>`;
 
             } catch (err) {
-                container.innerHTML = `<div class="empty-state"><p>Error: ${err.message}</p></div>`;
+                container.innerHTML = `<div class="empty-state" style="color:#ef4444;">${err.message}</div>`;
             }
 
             loading.classList.remove('visible');
-            adMid.style.display = 'flex';
+            adMid.classList.add('visible');
         }
 
         document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(); });

@@ -3,39 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms of Service - SocialTrace</title>
+    <title>Terms of Service — SocialTrace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        body { font-family: -apple-system, sans-serif; background: #0f0f1a; color: #e0e0e0; padding: 40px 20px; line-height: 1.8; max-width: 800px; margin: 0 auto; }
-        h1 { color: #667eea; margin-bottom: 20px; }
-        h2 { color: #a78bfa; margin-top: 30px; }
-        a { color: #667eea; }
+        :root { --bg: #f5f4f0; --fg: #0f0f0f; --accent: #ff2d55; --muted: #888; --border: #d8d6d0; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--fg); padding: 4rem 2rem; line-height: 1.8; max-width: 700px; margin: 0 auto; font-weight: 300; }
+        h1 { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        h2 { font-family: 'Space Mono', monospace; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2rem; color: var(--fg); }
+        p, li { font-size: 0.9rem; color: var(--fg); }
+        ul { padding-left: 1.5rem; margin-top: 0.5rem; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .back { font-family: 'Space Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 3rem; display: inline-block; }
+        .disclaimer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--muted); }
     </style>
 </head>
 <body>
     <h1>Terms of Service</h1>
-    <p>Last updated: 2025</p>
+    <p style="color: var(--muted); font-size: 0.8rem;">Last updated: 2025</p>
 
     <h2>Service Description</h2>
-    <p>SocialTrace is a free tool that searches publicly available social media profiles across multiple platforms. Results are provided as-is based on publicly accessible information.</p>
+    <p>SocialTrace is a free tool that searches publicly available social media profiles. Results are based on publicly accessible information and provided as-is.</p>
 
     <h2>Acceptable Use</h2>
-    <p>You agree to use SocialTrace only for lawful purposes. You may not use this service to:</p>
+    <p>You agree to use SocialTrace only for lawful purposes. You may not:</p>
     <ul>
         <li>Stalk, harass, or intimidate any person</li>
-        <li>Conduct unauthorized investigations</li>
-        <li>Scrape or bulk-collect data from our service</li>
+        <li>Conduct unauthorized surveillance or investigations</li>
+        <li>Scrape or bulk-collect data from this service</li>
         <li>Use results for discriminatory purposes</li>
     </ul>
 
     <h2>Accuracy</h2>
-    <p>We do not guarantee the accuracy of search results. Profile matches are based on publicly available username data and may not always represent the correct individual.</p>
+    <p>We do not guarantee accuracy of results. Username matches are based on publicly available data and may not always represent the intended individual.</p>
 
     <h2>Limitation of Liability</h2>
-    <p>SocialTrace is provided "as is" without warranties. We are not liable for any damages arising from the use of this service.</p>
+    <p>SocialTrace is provided "as is" without warranties of any kind. We are not liable for damages arising from the use of this service.</p>
+
+    <h2>Disclaimer</h2>
+    <p>SocialTrace is an independent project. We are not affiliated with, endorsed by, or connected to Instagram, TikTok, X/Twitter, Facebook, Threads, Meta Platforms Inc., ByteDance, or any social media company.</p>
 
     <h2>Changes</h2>
-    <p>We reserve the right to modify these terms at any time. Continued use of the service constitutes acceptance of updated terms.</p>
+    <p>We reserve the right to modify these terms at any time. Continued use constitutes acceptance of updated terms.</p>
 
-    <p style="margin-top: 40px;"><a href="/">Back to SocialTrace</a></p>
+    <div class="disclaimer">Not affiliated with Instagram, TikTok, X/Twitter, Facebook, Threads, or Meta Platforms Inc.</div>
+
+    <a href="/" class="back">&larr; Back to SocialTrace</a>
 </body>
 </html>

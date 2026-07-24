@@ -347,7 +347,13 @@ async function checkEmailOnTwitter(email) {
     });
 
     clearTimeout(timeout);
-    const data = await response.json();
+    const text = await response.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      return { platform: 'twitter', found: false, method: 'email', url: null, note: 'Could not check (blocked)' };
+    }
     const found = data.taken === true;
 
     const result = {
@@ -361,7 +367,7 @@ async function checkEmailOnTwitter(email) {
     setCache(cacheKey, result);
     return result;
   } catch (err) {
-    return { platform: 'twitter', found: false, method: 'email', error: err.message };
+    return { platform: 'twitter', found: false, method: 'email', note: 'Could not check' };
   }
 }
 
