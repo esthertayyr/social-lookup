@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SocialTrace — Find Anyone Across Social Media</title>
     <meta name="description" content="Search for anyone across Instagram, TikTok, Twitter/X, Facebook, and Threads. View profiles anonymously or open in app.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- REPLACE WITH YOUR ADSENSE CODE -->
     <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
@@ -34,7 +34,9 @@
             background: var(--bg);
             color: var(--fg);
             min-height: 100vh;
+            min-height: 100dvh;
             -webkit-text-size-adjust: 100%;
+            padding-bottom: 60px;
         }
 
         body::before {
@@ -60,10 +62,7 @@
             justify-content: center;
         }
 
-        .ad-slot-top {
-            min-height: 70px;
-            border-bottom: 1px solid var(--subtle);
-        }
+        .ad-slot-top { min-height: 60px; border-bottom: 1px solid var(--subtle); }
 
         .ad-slot-infeed {
             min-height: 250px;
@@ -84,31 +83,20 @@
 
         .ad-slot-bottom.visible { display: flex; }
 
-        .ad-slot-viewer {
-            min-height: 90px;
-            border: 1px solid var(--subtle);
-            border-radius: var(--radius);
-            background: var(--surface);
-            margin-bottom: 12px;
-        }
-
-        .ad-sticky-mobile {
-            display: none;
+        .ad-sticky {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 999;
+            bottom: 0; left: 0; right: 0;
+            z-index: 900;
             min-height: 50px;
             background: var(--surface);
             border-top: 1px solid var(--subtle);
-            box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.04);
         }
 
         .ad-label {
             font-family: 'JetBrains Mono', monospace;
             color: var(--notfound);
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             text-transform: uppercase;
             letter-spacing: 0.12em;
         }
@@ -118,67 +106,51 @@
             position: relative;
             z-index: 1;
             text-align: center;
-            padding: 3.5rem 2rem 1.5rem;
+            padding: 2.5rem 1.25rem 1rem;
         }
 
         .hero .brand {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
         .brand-mark {
-            width: 32px;
-            height: 32px;
+            width: 28px; height: 28px;
             background: var(--accent);
-            border-radius: 8px;
+            border-radius: 7px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .brand-mark svg {
-            width: 18px;
-            height: 18px;
-            fill: none;
-            stroke: #fff;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+            width: 15px; height: 15px;
+            fill: none; stroke: #fff;
+            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
         }
 
-        .brand-name {
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            color: var(--fg);
-        }
+        .brand-name { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.03em; }
 
         .hero h1 {
-            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            font-size: 1.5rem;
             font-weight: 800;
-            letter-spacing: -0.035em;
-            line-height: 1.2;
-            color: var(--fg);
-            margin-bottom: 0.5rem;
+            letter-spacing: -0.03em;
+            line-height: 1.25;
+            margin-bottom: 0.4rem;
         }
 
-        .hero p {
-            font-size: 0.95rem;
-            font-weight: 400;
-            color: var(--muted);
-            line-height: 1.6;
-        }
+        .hero p { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
 
         /* --- SEARCH --- */
         .search-section {
             position: relative;
             z-index: 1;
-            max-width: 600px;
+            max-width: 560px;
             width: 100%;
-            margin: 1.5rem auto;
-            padding: 0 1.5rem;
+            margin: 1.25rem auto;
+            padding: 0 1rem;
         }
 
         .search-bar {
@@ -197,20 +169,20 @@
 
         .search-bar input {
             flex: 1;
-            padding: 0.9rem 1.2rem;
+            padding: 14px 16px;
             border: none;
             background: transparent;
             font-family: 'Outfit', sans-serif;
             font-size: 0.9rem;
-            font-weight: 400;
             color: var(--fg);
             outline: none;
+            min-width: 0;
         }
 
         .search-bar input::placeholder { color: var(--muted); font-weight: 300; }
 
         .search-bar button {
-            padding: 0.9rem 1.6rem;
+            padding: 14px 20px;
             border: none;
             background: var(--accent);
             color: #fff;
@@ -220,28 +192,31 @@
             cursor: pointer;
             transition: background 0.2s;
             white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .search-bar button:hover { background: var(--accent-hover); }
+        .search-bar button:active { background: var(--accent-hover); }
 
         .search-tabs {
             display: flex;
             justify-content: center;
-            gap: 4px;
-            margin-top: 12px;
+            gap: 6px;
+            margin-top: 10px;
         }
 
         .search-tabs button {
-            padding: 6px 14px;
+            padding: 7px 14px;
             border: 1.5px solid var(--subtle);
             border-radius: 6px;
             background: var(--surface);
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.68rem;
+            font-size: 0.65rem;
             font-weight: 500;
             color: var(--muted);
             cursor: pointer;
             transition: all 0.15s;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .search-tabs button.active {
@@ -250,53 +225,44 @@
             color: #fff;
         }
 
-        .search-tabs button:hover:not(.active) {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        /* --- RESULTS (full width) --- */
+        /* --- RESULTS --- */
         .results-area {
             position: relative;
             z-index: 1;
             width: 100%;
             max-width: 900px;
-            margin: 1.5rem auto;
-            padding: 0 1.5rem;
+            margin: 1.25rem auto;
+            padding: 0 1rem;
         }
 
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 12px;
+            grid-template-columns: 1fr;
+            gap: 10px;
         }
 
         .result-card {
             background: var(--surface);
             border: 1.5px solid var(--subtle);
             border-radius: 10px;
-            padding: 1.1rem;
+            padding: 14px 14px 14px 17px;
             position: relative;
             overflow: hidden;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.15s;
         }
 
         .result-card::before {
             content: '';
             position: absolute;
             top: 0; left: 0;
-            width: 3px;
-            height: 100%;
+            width: 3px; height: 100%;
             background: var(--notfound);
         }
 
         .result-card.found::before { background: var(--found); }
         .result-card.linked::before { background: var(--linked); }
 
-        .result-card:hover {
-            border-color: var(--accent);
-            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.06);
-        }
+        .result-card:active { border-color: var(--accent); }
 
         .result-card .platform-header {
             display: flex;
@@ -306,14 +272,13 @@
         }
 
         .platform-icon {
-            width: 34px;
-            height: 34px;
+            width: 34px; height: 34px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 600;
             color: #fff;
             flex-shrink: 0;
@@ -329,7 +294,7 @@
 
         .platform-status {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
+            font-size: 0.58rem;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.04em;
@@ -342,23 +307,19 @@
 
         .result-card .username {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: var(--muted);
             margin-bottom: 4px;
         }
 
-        .result-card .note {
-            font-size: 0.7rem;
-            color: var(--muted);
-            margin-bottom: 8px;
-        }
+        .result-card .note { font-size: 0.68rem; color: var(--muted); margin-bottom: 8px; }
 
         .link-badge {
             display: inline-block;
             padding: 2px 6px;
             border-radius: 3px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.55rem;
+            font-size: 0.52rem;
             font-weight: 600;
             text-transform: uppercase;
             margin-bottom: 8px;
@@ -368,22 +329,25 @@
 
         .card-actions {
             display: flex;
-            gap: 6px;
+            gap: 8px;
         }
 
         .card-actions a,
         .card-actions span {
             flex: 1;
-            display: block;
-            padding: 8px 10px;
-            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 11px 10px;
+            border-radius: 8px;
             font-family: 'Outfit', sans-serif;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 600;
             text-decoration: none;
             text-align: center;
             transition: all 0.15s;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .btn-app {
@@ -391,14 +355,14 @@
             color: var(--fg);
             border: 1px solid var(--subtle);
         }
-        .btn-app:hover { background: var(--fg); color: #fff; border-color: var(--fg); }
+        .btn-app:active { background: var(--fg); color: #fff; }
 
         .btn-anon {
             background: var(--accent);
             color: #fff;
             border: 1px solid var(--accent);
         }
-        .btn-anon:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+        .btn-anon:active { background: var(--accent-hover); }
 
         .btn-disabled {
             background: var(--bg);
@@ -410,14 +374,13 @@
 
         .result-card.not-found { opacity: 0.4; }
 
-        /* --- VIEWER (in-site iframe) --- */
+        /* --- VIEWER OVERLAY --- */
         .viewer-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             z-index: 1000;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(3px);
+            background: var(--bg);
             flex-direction: column;
         }
 
@@ -427,86 +390,141 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 20px;
+            padding: 10px 14px;
             background: var(--surface);
             border-bottom: 1px solid var(--subtle);
+            flex-shrink: 0;
         }
 
-        .viewer-header .viewer-title {
+        .viewer-title {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
+            font-size: 0.68rem;
             font-weight: 500;
             color: var(--fg);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+            margin-right: 10px;
         }
 
-        .viewer-header .viewer-close {
-            padding: 6px 14px;
+        .viewer-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .viewer-actions button {
+            padding: 8px 14px;
             border-radius: 6px;
             border: 1px solid var(--subtle);
             background: var(--surface);
             font-family: 'Outfit', sans-serif;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 600;
-            color: var(--fg);
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
             transition: all 0.15s;
         }
 
-        .viewer-header .viewer-close:hover { background: var(--fg); color: #fff; }
+        .viewer-actions .btn-new-tab {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .viewer-actions .btn-new-tab:active { background: var(--accent); color: #fff; }
+        .viewer-actions .btn-close { color: var(--fg); }
+        .viewer-actions .btn-close:active { background: var(--fg); color: #fff; }
 
         .viewer-ad {
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 90px;
+            min-height: 60px;
             background: var(--surface);
             border-bottom: 1px solid var(--subtle);
+            flex-shrink: 0;
+        }
+
+        .viewer-body {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
         }
 
         .viewer-frame {
-            flex: 1;
-            border: none;
             width: 100%;
+            height: 100%;
+            border: none;
         }
 
+        .viewer-fallback {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            background: var(--bg);
+        }
+
+        .viewer-fallback.visible { display: flex; }
+
+        .viewer-fallback p {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .viewer-fallback a {
+            display: inline-flex;
+            padding: 12px 24px;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+
+        .viewer-fallback a:active { background: var(--accent-hover); }
+
         /* --- LOADING --- */
-        .loading { text-align: center; padding: 4rem 2rem; display: none; }
+        .loading { text-align: center; padding: 3rem 2rem; display: none; }
         .loading.visible { display: block; }
 
         .spinner {
-            width: 28px;
-            height: 28px;
+            width: 26px; height: 26px;
             border: 2.5px solid var(--subtle);
             border-top-color: var(--accent);
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
-            margin: 0 auto 1rem;
+            margin: 0 auto 0.75rem;
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        .loading p {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.72rem;
-            color: var(--muted);
-        }
+        .loading p { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--muted); }
 
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
             color: var(--muted);
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             font-weight: 300;
         }
 
-        .variation-section { margin-top: 2rem; }
+        .variation-section { margin-top: 1.5rem; }
         .variation-section h3 {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.72rem;
+            font-size: 0.68rem;
             font-weight: 600;
             color: var(--muted);
-            margin-bottom: 10px;
-            padding-bottom: 8px;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
             border-bottom: 1px solid var(--subtle);
         }
 
@@ -514,37 +532,30 @@
         .footer {
             position: relative;
             z-index: 1;
-            padding: 1.5rem 2rem;
+            padding: 1.25rem 1.5rem;
             border-top: 1px solid var(--subtle);
             background: var(--surface);
             text-align: center;
-            margin-top: 3rem;
+            margin-top: 2rem;
         }
 
-        .footer p { font-size: 0.7rem; color: var(--muted); margin-bottom: 6px; }
-        .footer .links { display: flex; justify-content: center; gap: 1.5rem; }
-        .footer a { font-size: 0.7rem; color: var(--muted); text-decoration: none; }
+        .footer p { font-size: 0.65rem; color: var(--muted); margin-bottom: 4px; }
+        .footer .links { display: flex; justify-content: center; gap: 1.25rem; }
+        .footer a { font-size: 0.65rem; color: var(--muted); text-decoration: none; }
         .footer a:hover { color: var(--accent); }
 
-        /* --- MOBILE --- */
-        @media (max-width: 768px) {
-            .hero { padding: 2.5rem 1.5rem 1rem; }
-            .hero h1 { font-size: 1.5rem; }
-            .search-section { padding: 0 1rem; }
-            .search-bar input { padding: 0.8rem 1rem; font-size: 0.85rem; }
-            .search-bar button { padding: 0.8rem 1rem; font-size: 0.8rem; }
-            .search-tabs button { padding: 5px 10px; font-size: 0.6rem; }
-            .results-area { padding: 0 0.75rem; }
-            .results-grid { grid-template-columns: 1fr; }
-            .ad-sticky-mobile { display: flex; }
-            .ad-slot-top { min-height: 50px; }
-            body { padding-bottom: 60px; }
+        /* --- DESKTOP (wider screens) --- */
+        @media (min-width: 640px) {
+            .hero { padding: 3.5rem 2rem 1.5rem; }
+            .hero h1 { font-size: 2.2rem; }
+            .results-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+            .result-card { padding: 16px 16px 16px 19px; }
+            .ad-sticky { display: none; }
+            body { padding-bottom: 0; }
         }
 
-        @media (max-width: 400px) {
-            .hero h1 { font-size: 1.3rem; }
-            .brand-name { font-size: 1.1rem; }
-            .search-tabs { flex-wrap: wrap; gap: 4px; }
+        @media (min-width: 1024px) {
+            .results-grid { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 </head>
@@ -570,7 +581,7 @@
     <!-- Search -->
     <div class="search-section">
         <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Username, name, email, or phone..." autocomplete="off">
+            <input type="text" id="searchInput" placeholder="Username, name, email, or phone..." autocomplete="off" enterkeyhint="search">
             <button onclick="performSearch()">Search</button>
         </div>
         <div class="search-tabs">
@@ -609,7 +620,7 @@
     </div>
 
     <!-- Mobile sticky bottom ad -->
-    <div class="ad-slot ad-sticky-mobile">
+    <div class="ad-slot ad-sticky">
         <span class="ad-label">Advertisement</span>
     </div>
 
@@ -617,16 +628,26 @@
     <div class="viewer-overlay" id="viewerOverlay">
         <div class="viewer-header">
             <span class="viewer-title" id="viewerTitle">Viewing anonymously</span>
-            <button class="viewer-close" onclick="closeViewer()">Close</button>
+            <div class="viewer-actions">
+                <button class="btn-new-tab" id="viewerNewTab" onclick="openInNewTab()">New Tab</button>
+                <button class="btn-close" onclick="closeViewer()">Close</button>
+            </div>
         </div>
         <div class="viewer-ad ad-slot">
             <span class="ad-label">Advertisement</span>
         </div>
-        <iframe class="viewer-frame" id="viewerFrame" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+        <div class="viewer-body">
+            <iframe class="viewer-frame" id="viewerFrame" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+            <div class="viewer-fallback" id="viewerFallback">
+                <p>This site can't be loaded in the viewer.<br>Open it in a new tab to browse anonymously.</p>
+                <a id="viewerFallbackLink" href="#" target="_blank" rel="noopener">Open in New Tab</a>
+            </div>
+        </div>
     </div>
 
     <script>
         let searchMode = 'username';
+        let currentViewerUrl = '';
         const ALL_PLATFORMS = ['instagram', 'tiktok', 'twitter', 'facebook', 'threads'];
 
         const platformMeta = {
@@ -634,42 +655,86 @@
                 name: 'Instagram', icon: 'IG', iconClass: 'instagram',
                 appUrl: 'https://www.instagram.com/{u}/',
                 anonUrl: 'https://imginn.com/{u}',
+                canEmbed: true,
             },
             tiktok: {
                 name: 'TikTok', icon: 'TT', iconClass: 'tiktok',
                 appUrl: 'https://www.tiktok.com/@{u}',
                 anonUrl: 'https://www.tiktok.com/@{u}',
+                canEmbed: false,
             },
             twitter: {
                 name: 'X / Twitter', icon: 'X', iconClass: 'twitter',
                 appUrl: 'https://x.com/{u}',
                 anonUrl: 'https://nitter.net/{u}',
+                canEmbed: true,
             },
             facebook: {
                 name: 'Facebook', icon: 'FB', iconClass: 'facebook',
                 appUrl: 'https://www.facebook.com/{u}',
                 anonUrl: 'https://www.facebook.com/{u}',
+                canEmbed: false,
             },
             threads: {
                 name: 'Threads', icon: 'TH', iconClass: 'threads',
                 appUrl: 'https://www.threads.net/@{u}',
                 anonUrl: 'https://www.threads.net/@{u}',
+                canEmbed: false,
             },
         };
 
-        function openViewer(url, platform, username) {
-            document.getElementById('viewerTitle').textContent = `Viewing @${username} on ${platform} anonymously`;
-            document.getElementById('viewerFrame').src = url;
+        // --- Viewer ---
+        function openViewer(url, platform, username, canEmbed) {
+            currentViewerUrl = url;
+            document.getElementById('viewerTitle').textContent = `@${username} — ${platform}`;
+            document.getElementById('viewerNewTab').style.display = '';
+            document.getElementById('viewerFallbackLink').href = url;
+            document.getElementById('viewerFallback').classList.remove('visible');
+
+            if (canEmbed) {
+                const frame = document.getElementById('viewerFrame');
+                frame.style.display = 'block';
+                frame.src = url;
+
+                // Detect load failure after timeout
+                setTimeout(() => {
+                    try {
+                        const doc = frame.contentDocument || frame.contentWindow.document;
+                        if (!doc || !doc.body || doc.body.innerHTML.length < 100) {
+                            showFallback();
+                        }
+                    } catch (e) {
+                        // Cross-origin = loaded successfully (can't access content)
+                    }
+                }, 4000);
+            } else {
+                document.getElementById('viewerFrame').style.display = 'none';
+                showFallback();
+            }
+
             document.getElementById('viewerOverlay').classList.add('visible');
             document.body.style.overflow = 'hidden';
+        }
+
+        function showFallback() {
+            document.getElementById('viewerFrame').style.display = 'none';
+            document.getElementById('viewerFallback').classList.add('visible');
+        }
+
+        function openInNewTab() {
+            window.open(currentViewerUrl, '_blank');
         }
 
         function closeViewer() {
             document.getElementById('viewerOverlay').classList.remove('visible');
             document.getElementById('viewerFrame').src = '';
+            document.getElementById('viewerFrame').style.display = 'block';
+            document.getElementById('viewerFallback').classList.remove('visible');
             document.body.style.overflow = '';
+            currentViewerUrl = '';
         }
 
+        // --- Search ---
         function clientCheck(platform, username) {
             return new Promise((resolve) => {
                 const timer = setTimeout(() => resolve({ platform, username, found: false, fallback: true }), 5000);
@@ -699,8 +764,7 @@
 
         function createCard(r) {
             const meta = platformMeta[r.platform];
-            let statusClass = 'not-found', statusText = 'Not found';
-            let cardExtra = 'not-found';
+            let statusClass = 'not-found', statusText = 'Not found', cardExtra = 'not-found';
 
             if (r.unsupported) { statusClass = 'unsupported'; statusText = 'Unavailable'; }
             else if (r.inferredFromLink) { statusClass = 'linked'; statusText = 'Linked'; cardExtra = 'linked'; }
@@ -715,7 +779,8 @@
             if (r.found && r.username) {
                 const appUrl = meta.appUrl.replace('{u}', r.username);
                 const anonUrl = meta.anonUrl.replace('{u}', r.username);
-                actions = `<div class="card-actions"><a href="${appUrl}" target="_blank" rel="noopener" class="btn-app">Open</a><a onclick="openViewer('${anonUrl}', '${meta.name}', '${r.username}')" class="btn-anon">Anonymous</a></div>`;
+                const canEmbed = meta.canEmbed;
+                actions = `<div class="card-actions"><a href="${appUrl}" target="_blank" rel="noopener" class="btn-app">Open</a><a onclick="openViewer('${anonUrl}','${meta.name}','${r.username}',${canEmbed})" class="btn-anon">Anonymous</a></div>`;
             } else if (r.found && !r.username) {
                 actions = `<div class="card-actions"><span class="btn-disabled">Exists</span></div>`;
             } else {
@@ -739,13 +804,11 @@
             const found = results.filter(r => r.found);
             const notFound = results.filter(r => !r.found);
             const sorted = [...found, ...notFound];
-
             let items = [];
             sorted.forEach((r, i) => {
                 items.push(createCard(r));
                 if (i === 1) items.push(createInfeedAd());
             });
-
             return `<div class="results-grid">${items.join('')}</div>`;
         }
 
@@ -806,8 +869,7 @@
                         const v = variations[i];
                         const vRes = await fetch('/api/lookup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: v, platforms: ALL_PLATFORMS }) });
                         const vData = await safeJson(vRes);
-                        const vResults = vData.results || [];
-                        html += `<div class="variation-section"><h3>@${v}</h3>${renderResults(vResults)}</div>`;
+                        html += `<div class="variation-section"><h3>@${v}</h3>${renderResults(vData.results || [])}</div>`;
                         if (i === 0) html += createInfeedAd();
                     }
                     container.innerHTML = html;
