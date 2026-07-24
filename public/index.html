@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialTrace - Find Anyone Across Social Media</title>
+    <meta name="description" content="Search for anyone across Instagram, TikTok, Twitter/X, Facebook, and Threads. Find social media profiles by username, email, or phone number.">
+
+    <!-- REPLACE THIS WITH YOUR GOOGLE ADSENSE CODE -->
+    <!-- Get it from: https://www.google.com/adsense → Sites → Add site → copy the script tag -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* --- ADS --- */
+        .ad-slot {
+            width: 100%;
+            background: #1a1a2e;
+            border: 1px solid #2a2a4a;
+            padding: 10px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .ad-slot-top {
+            min-height: 90px;
+            border-bottom: 1px solid #2a2a4a;
+            border-radius: 0;
+        }
+
+        .ad-slot-mid {
+            min-height: 250px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .ad-slot-sidebar {
+            width: 160px;
+            min-height: 600px;
+            border-radius: 8px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .ad-slot-mobile {
+            display: none;
+            min-height: 100px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+
+        .ad-label {
+            color: #444;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- HEADER --- */
+        .header {
+            text-align: center;
+            padding: 40px 20px 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .header p { color: #888; font-size: 1.1rem; }
+
+        /* --- SEARCH --- */
+        .search-section {
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 16px 24px;
+            border-radius: 50px;
+            border: 2px solid #2a2a4a;
+            background: #1a1a2e;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus { border-color: #667eea; }
+
+        .search-box button {
+            padding: 16px 32px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            white-space: nowrap;
+        }
+
+        .search-box button:hover { transform: scale(1.03); opacity: 0.9; }
+        .search-box button:active { transform: scale(0.97); }
+
+        .search-mode {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .search-mode button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #2a2a4a;
+            background: transparent;
+            color: #888;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .search-mode button.active {
+            background: #667eea22;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .search-options {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .search-options label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            background: #1a1a2e;
+            border: 1px solid #2a2a4a;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .search-options label:hover { border-color: #667eea; }
+        .search-options input[type="checkbox"] { accent-color: #667eea; }
+
+        /* --- LAYOUT --- */
+        .main-layout {
+            display: flex;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            gap: 20px;
+        }
+
+        .sidebar { width: 160px; flex-shrink: 0; }
+        .results-section { flex: 1; min-width: 0; }
+
+        /* --- RESULTS --- */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .result-card {
+            background: #1a1a2e;
+            border: 1px solid #2a2a4a;
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .result-card:hover { transform: translateY(-2px); border-color: #667eea; }
+
+        .result-card .platform-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .platform-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .platform-icon.instagram { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .platform-icon.tiktok { background: #000; border: 1px solid #333; }
+        .platform-icon.twitter { background: #1a1a1a; border: 1px solid #333; }
+        .platform-icon.facebook { background: #1877f2; }
+        .platform-icon.threads { background: #000; border: 1px solid #333; }
+
+        .platform-name { font-weight: 600; font-size: 0.95rem; }
+        .platform-status { font-size: 0.75rem; }
+        .platform-status.found { color: #4ade80; }
+        .platform-status.not-found { color: #f87171; }
+        .platform-status.linked { color: #60a5fa; }
+        .platform-status.unsupported { color: #666; }
+
+        .result-card .username { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 4px; }
+        .result-card .note { font-size: 0.8rem; color: #888; margin-bottom: 12px; }
+
+        .link-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            background: #60a5fa22;
+            color: #60a5fa;
+            border: 1px solid #60a5fa44;
+        }
+
+        .method-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .method-badge.google { background: #fbbf2422; color: #fbbf24; border: 1px solid #fbbf2444; }
+        .method-badge.cached { background: #667eea22; color: #667eea; border: 1px solid #667eea44; }
+        .method-badge.client { background: #a78bfa22; color: #a78bfa; border: 1px solid #a78bfa44; }
+
+        .result-card .view-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #2a2a4a;
+            background: transparent;
+            color: #667eea;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: background 0.2s;
+        }
+
+        .result-card .view-btn:hover { background: #667eea22; }
+        .result-card.not-found { opacity: 0.5; }
+        .result-card.not-found .view-btn { color: #666; border-color: #1a1a2e; cursor: default; pointer-events: none; }
+
+        .loading { text-align: center; padding: 60px 20px; display: none; }
+        .loading.visible { display: block; }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #2a2a4a;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading p { color: #888; font-size: 0.9rem; }
+
+        .empty-state { text-align: center; padding: 80px 20px; color: #666; }
+        .empty-state .icon { font-size: 3rem; margin-bottom: 16px; }
+
+        .variation-section {
+            margin-top: 30px;
+            border-top: 1px solid #2a2a4a;
+            padding-top: 20px;
+        }
+        .variation-section h3 { font-size: 0.9rem; color: #888; margin-bottom: 12px; }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #555;
+            font-size: 0.8rem;
+            border-top: 1px solid #1a1a2e;
+            margin-top: 60px;
+        }
+
+        .footer a { color: #667eea; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+
+        /* --- MOBILE --- */
+        @media (max-width: 768px) {
+            .header { padding: 24px 16px 12px; }
+            .header h1 { font-size: 1.8rem; }
+            .header p { font-size: 0.95rem; }
+            .search-section { padding: 0 12px; margin: 20px auto; }
+            .search-box { flex-direction: column; }
+            .search-box input { padding: 14px 20px; }
+            .search-box button { width: 100%; padding: 14px; }
+            .search-mode button { padding: 6px 12px; font-size: 0.75rem; }
+            .search-options label { padding: 5px 10px; font-size: 0.8rem; }
+            .sidebar { display: none; }
+            .main-layout { padding: 0 12px; }
+            .results-grid { grid-template-columns: 1fr; }
+            .ad-slot-mobile { display: flex; }
+            .ad-slot-top { min-height: 60px; }
+        }
+
+        @media (max-width: 400px) {
+            .header h1 { font-size: 1.5rem; }
+            .search-mode { gap: 4px; }
+            .search-mode button { padding: 5px 10px; font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Ad -->
+    <div class="ad-slot ad-slot-top">
+        <!-- REPLACE with AdSense: <ins class="adsbygoogle" data-ad-client="ca-pub-XXX" data-ad-slot="XXX" data-ad-format="horizontal" data-full-width-responsive="true"></ins> -->
+        <span class="ad-label">Advertisement</span>
+    </div>
+
+    <div class="header">
+        <h1>SocialTrace</h1>
+        <p>Find anyone across social media platforms instantly.</p>
+    </div>
+
+    <div class="search-section">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Enter a @username..." autocomplete="off">
+            <button onclick="performSearch()">Search</button>
+        </div>
+        <div class="search-mode">
+            <button class="active" id="modeUsername" onclick="setMode('username')">Username</button>
+            <button id="modeVariations" onclick="setMode('variations')">Name</button>
+            <button id="modeEmail" onclick="setMode('email')">Email</button>
+            <button id="modePhone" onclick="setMode('phone')">Phone</button>
+        </div>
+        <div class="search-options" id="platformCheckboxes">
+            <label><input type="checkbox" checked data-platform="instagram"> Instagram</label>
+            <label><input type="checkbox" checked data-platform="tiktok"> TikTok</label>
+            <label><input type="checkbox" checked data-platform="twitter"> X</label>
+            <label><input type="checkbox" checked data-platform="facebook"> Facebook</label>
+            <label><input type="checkbox" checked data-platform="threads"> Threads</label>
+        </div>
+    </div>
+
+    <!-- Mobile Ad (shows only on phones) -->
+    <div class="ad-slot ad-slot-mobile">
+        <!-- REPLACE with AdSense mobile banner -->
+        <span class="ad-label">Advertisement</span>
+    </div>
+
+    <div class="main-layout">
+        <div class="sidebar">
+            <div class="ad-slot ad-slot-sidebar">
+                <!-- REPLACE with AdSense sidebar -->
+                <span class="ad-label">Ad</span>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p id="loadingText">Checking profiles...</p>
+            </div>
+
+            <div class="empty-state" id="emptyState">
+                <div class="icon">&#128269;</div>
+                <p>Search by username, full name, email, or phone number</p>
+            </div>
+
+            <div id="resultsContainer"></div>
+
+            <!-- Mid-content Ad (shows after results) -->
+            <div class="ad-slot ad-slot-mid" id="adMid" style="display:none;">
+                <!-- REPLACE with AdSense rectangle -->
+                <span class="ad-label">Advertisement</span>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="ad-slot ad-slot-sidebar">
+                <!-- REPLACE with AdSense sidebar -->
+                <span class="ad-label">Ad</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2025 SocialTrace. Searches publicly available information only.</p>
+        <p style="margin-top: 8px;"><a href="/privacy.html">Privacy Policy</a> | <a href="/terms.html">Terms of Service</a></p>
+    </div>
+
+    <script>
+        let searchMode = 'username';
+
+        const platformMeta = {
+            instagram: { name: 'Instagram', icon: 'IG', iconClass: 'instagram', url: 'https://www.instagram.com/{u}/' },
+            tiktok: { name: 'TikTok', icon: 'TT', iconClass: 'tiktok', url: 'https://www.tiktok.com/@{u}' },
+            twitter: { name: 'X / Twitter', icon: 'X', iconClass: 'twitter', url: 'https://x.com/{u}' },
+            facebook: { name: 'Facebook', icon: 'FB', iconClass: 'facebook', url: 'https://www.facebook.com/{u}' },
+            threads: { name: 'Threads', icon: 'TH', iconClass: 'threads', url: 'https://www.threads.net/@{u}' },
+        };
+
+        // Client-side check (user's browser IP, not server)
+        function clientCheck(platform, username) {
+            return new Promise((resolve) => {
+                const timer = setTimeout(() => resolve({ platform, username, found: false, fallback: true }), 5000);
+
+                if (platform === 'tiktok') {
+                    fetch(`https://www.tiktok.com/oembed?url=https://www.tiktok.com/@${username}`)
+                        .then(r => { clearTimeout(timer); resolve({ platform, username, found: r.status === 200, url: `https://www.tiktok.com/@${username}`, method: 'client' }); })
+                        .catch(() => { clearTimeout(timer); resolve({ platform, username, found: false, fallback: true }); });
+                } else {
+                    clearTimeout(timer);
+                    resolve({ platform, username, found: false, fallback: true });
+                }
+            });
+        }
+
+        function setMode(mode) {
+            searchMode = mode;
+            document.querySelectorAll('.search-mode button').forEach(b => b.classList.remove('active'));
+            document.getElementById('mode' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('active');
+
+            const input = document.getElementById('searchInput');
+            const boxes = document.getElementById('platformCheckboxes');
+
+            const placeholders = { username: 'Enter a @username...', variations: 'Enter a full name (e.g. Esther Tay)...', email: 'Enter an email address...', phone: 'Enter phone (with country code, e.g. +65...)' };
+            input.placeholder = placeholders[mode];
+            boxes.style.display = (mode === 'email' || mode === 'phone') ? 'none' : 'flex';
+        }
+
+        function getSelectedPlatforms() {
+            return [...document.querySelectorAll('.search-options input:checked')].map(cb => cb.dataset.platform);
+        }
+
+        function createCard(r) {
+            const meta = platformMeta[r.platform];
+            let statusClass = 'not-found', statusText = 'Not found';
+
+            if (r.unsupported) { statusClass = 'unsupported'; statusText = 'Not supported'; }
+            else if (r.inferredFromLink) { statusClass = 'linked'; statusText = 'Linked'; }
+            else if (r.found) { statusClass = 'found'; statusText = 'Found'; }
+
+            const cardClass = r.found ? '' : 'not-found';
+            const methodBadge = r.method === 'google' ? '<span class="method-badge google">via Google</span>' :
+                               r.method === 'client' ? '<span class="method-badge client">verified</span>' :
+                               r.fromCache ? '<span class="method-badge cached">cached</span>' : '';
+
+            const linkBadge = r.inferredFromLink ? `<div class="link-badge">Linked from ${platformMeta[r.linkedFrom]?.name || ''}</div>` :
+                             r.linkNote ? `<div class="link-badge">${r.linkNote}</div>` : '';
+
+            const note = r.note ? `<div class="note">${r.note}</div>` : '';
+            const uname = r.username ? `<div class="username">@${r.username}</div>` : '';
+            const url = r.url || (r.username ? meta.url.replace('{u}', r.username) : null);
+
+            const btn = (url && r.found) ? `<a href="${url}" target="_blank" rel="noopener" class="view-btn">View Profile</a>` :
+                       (r.found && !url) ? `<span class="view-btn" style="color:#4ade80;border-color:#4ade8044">Account Exists</span>` :
+                       `<span class="view-btn">Not Available</span>`;
+
+            return `<div class="result-card ${cardClass}"><div class="platform-header"><div class="platform-icon ${meta.iconClass}">${meta.icon}</div><div><div class="platform-name">${meta.name}</div><div class="platform-status ${statusClass}">${statusText}</div></div></div>${uname}${methodBadge}${linkBadge}${note}${btn}</div>`;
+        }
+
+        async function performSearch() {
+            const input = document.getElementById('searchInput').value.trim();
+            if (!input) return;
+
+            const loading = document.getElementById('loading');
+            const loadingText = document.getElementById('loadingText');
+            const emptyState = document.getElementById('emptyState');
+            const container = document.getElementById('resultsContainer');
+            const adMid = document.getElementById('adMid');
+
+            emptyState.style.display = 'none';
+            container.innerHTML = '';
+            adMid.style.display = 'none';
+            loading.classList.add('visible');
+
+            try {
+                let results = [];
+
+                if (searchMode === 'username') {
+                    loadingText.textContent = 'Checking profiles...';
+                    const platforms = getSelectedPlatforms();
+                    const clean = input.replace(/^@/, '').toLowerCase();
+
+                    // Client-side first
+                    const clientResults = await Promise.all(platforms.map(p => clientCheck(p, clean)));
+
+                    // Server for those that need fallback
+                    const needServer = clientResults.filter(r => r.fallback).map(r => r.platform);
+                    let serverResults = [];
+                    if (needServer.length > 0) {
+                        const res = await fetch('/api/lookup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: clean, platforms: needServer }) });
+                        const data = await res.json();
+                        serverResults = data.results;
+                    }
+
+                    results = platforms.map(p => {
+                        const c = clientResults.find(r => r.platform === p);
+                        if (c && !c.fallback) return c;
+                        return serverResults.find(r => r.platform === p) || c;
+                    });
+
+                    // IG → Threads link
+                    const ig = results.find(r => r.platform === 'instagram' && r.found);
+                    if (ig) {
+                        const th = results.find(r => r.platform === 'threads');
+                        if (th && !th.found) { th.found = true; th.inferredFromLink = true; th.linkedFrom = 'instagram'; }
+                        else if (th) { th.linkNote = 'Same person as Instagram'; }
+                    }
+
+                } else if (searchMode === 'variations') {
+                    loadingText.textContent = 'Trying name variations...';
+                    const platforms = getSelectedPlatforms();
+                    const res = await fetch('/api/lookup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: input.replace(/\s+/g, '').toLowerCase(), platforms }) });
+                    const data = await res.json();
+
+                    // Also try dot and underscore variations
+                    const parts = input.toLowerCase().split(/\s+/);
+                    const variations = [...new Set([parts.join(''), parts.join('.'), parts.join('_'), parts.reverse().join('')])];
+
+                    let html = '';
+                    for (const v of variations) {
+                        const vRes = await fetch('/api/lookup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: v, platforms }) });
+                        const vData = await vRes.json();
+                        const found = vData.results.filter(r => r.found);
+                        const notFound = vData.results.filter(r => !r.found);
+                        html += `<div class="variation-section"><h3>@${v}</h3><div class="results-grid">${[...found, ...notFound].map(createCard).join('')}</div></div>`;
+                    }
+
+                    loading.classList.remove('visible');
+                    container.innerHTML = html;
+                    adMid.style.display = 'flex';
+                    return;
+
+                } else if (searchMode === 'email') {
+                    loadingText.textContent = 'Checking email...';
+                    const res = await fetch('/api/lookup-email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: input }) });
+                    const data = await res.json();
+                    results = data.results;
+
+                } else if (searchMode === 'phone') {
+                    loadingText.textContent = 'Checking phone...';
+                    const res = await fetch('/api/lookup-phone', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: input }) });
+                    const data = await res.json();
+                    results = data.results;
+                }
+
+                const found = results.filter(r => r.found);
+                const notFound = results.filter(r => !r.found);
+                container.innerHTML = `<div class="results-grid">${[...found, ...notFound].map(createCard).join('')}</div>`;
+
+            } catch (err) {
+                container.innerHTML = `<div class="empty-state"><p>Error: ${err.message}</p></div>`;
+            }
+
+            loading.classList.remove('visible');
+            adMid.style.display = 'flex';
+        }
+
+        document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(); });
+    </script>
+</body>
+</html>
