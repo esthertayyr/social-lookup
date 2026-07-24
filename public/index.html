@@ -34,19 +34,16 @@
             background: var(--bg);
             color: var(--fg);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
             -webkit-text-size-adjust: 100%;
         }
 
-        /* Subtle dot grid background */
         body::before {
             content: '';
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             background-image: radial-gradient(circle, #d1d5db 0.5px, transparent 0.5px);
             background-size: 24px 24px;
-            opacity: 0.4;
+            opacity: 0.35;
             pointer-events: none;
             z-index: 0;
         }
@@ -57,42 +54,55 @@
             z-index: 1;
             width: 100%;
             background: var(--surface);
-            border-bottom: 1px solid var(--subtle);
             text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 90px;
         }
 
-        .ad-slot-mid {
+        .ad-slot-top {
+            min-height: 70px;
+            border-bottom: 1px solid var(--subtle);
+        }
+
+        .ad-slot-infeed {
             min-height: 250px;
             border: 1px solid var(--subtle);
             border-radius: var(--radius);
-            margin: 2rem 0;
-            display: none;
             background: var(--surface);
+            margin: 12px 0;
         }
 
-        .ad-slot-mid.visible { display: flex; }
-
-        .ad-slot-sidebar {
-            width: 160px;
-            min-height: 600px;
+        .ad-slot-bottom {
+            min-height: 250px;
             border: 1px solid var(--subtle);
             border-radius: var(--radius);
+            margin-top: 16px;
             background: var(--surface);
-            position: sticky;
-            top: 20px;
+            display: none;
         }
 
-        .ad-slot-mobile {
-            display: none;
+        .ad-slot-bottom.visible { display: flex; }
+
+        .ad-slot-viewer {
             min-height: 90px;
             border: 1px solid var(--subtle);
             border-radius: var(--radius);
             background: var(--surface);
-            margin: 1rem 1.5rem;
+            margin-bottom: 12px;
+        }
+
+        .ad-sticky-mobile {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            min-height: 50px;
+            background: var(--surface);
+            border-top: 1px solid var(--subtle);
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
         }
 
         .ad-label {
@@ -108,14 +118,14 @@
             position: relative;
             z-index: 1;
             text-align: center;
-            padding: 4.5rem 2rem 1.5rem;
+            padding: 3.5rem 2rem 1.5rem;
         }
 
         .hero .brand {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
         }
 
         .brand-mark {
@@ -146,20 +156,18 @@
         }
 
         .hero h1 {
-            font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
             font-weight: 800;
             letter-spacing: -0.035em;
-            line-height: 1.15;
+            line-height: 1.2;
             color: var(--fg);
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.5rem;
         }
 
         .hero p {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 400;
             color: var(--muted);
-            max-width: 380px;
-            margin: 0 auto;
             line-height: 1.6;
         }
 
@@ -167,9 +175,9 @@
         .search-section {
             position: relative;
             z-index: 1;
-            max-width: 540px;
+            max-width: 600px;
             width: 100%;
-            margin: 1.75rem auto;
+            margin: 1.5rem auto;
             padding: 0 1.5rem;
         }
 
@@ -202,7 +210,7 @@
         .search-bar input::placeholder { color: var(--muted); font-weight: 300; }
 
         .search-bar button {
-            padding: 0.9rem 1.4rem;
+            padding: 0.9rem 1.6rem;
             border: none;
             background: var(--accent);
             color: #fff;
@@ -247,23 +255,16 @@
             color: var(--accent);
         }
 
-        /* --- LAYOUT --- */
-        .main-layout {
+        /* --- RESULTS (full width) --- */
+        .results-area {
             position: relative;
             z-index: 1;
-            display: flex;
-            max-width: 1100px;
             width: 100%;
+            max-width: 900px;
             margin: 1.5rem auto;
             padding: 0 1.5rem;
-            gap: 1.5rem;
-            flex: 1;
         }
 
-        .sidebar { width: 160px; flex-shrink: 0; }
-        .results-section { flex: 1; min-width: 0; }
-
-        /* --- RESULTS --- */
         .results-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -274,7 +275,7 @@
             background: var(--surface);
             border: 1.5px solid var(--subtle);
             border-radius: 10px;
-            padding: 1.25rem;
+            padding: 1.1rem;
             position: relative;
             overflow: hidden;
             transition: border-color 0.2s, box-shadow 0.2s;
@@ -283,12 +284,10 @@
         .result-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             width: 3px;
             height: 100%;
             background: var(--notfound);
-            transition: background 0.2s;
         }
 
         .result-card.found::before { background: var(--found); }
@@ -326,11 +325,11 @@
         .platform-icon.facebook { background: #1877f2; }
         .platform-icon.threads { background: #111; }
 
-        .platform-name { font-weight: 600; font-size: 0.88rem; }
+        .platform-name { font-weight: 600; font-size: 0.85rem; }
 
         .platform-status {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.62rem;
+            font-size: 0.6rem;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.04em;
@@ -343,75 +342,65 @@
 
         .result-card .username {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.82rem;
-            font-weight: 500;
-            color: var(--fg);
+            font-size: 0.75rem;
+            color: var(--muted);
             margin-bottom: 4px;
         }
 
         .result-card .note {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--muted);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .link-badge {
             display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
+            padding: 2px 6px;
+            border-radius: 3px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.58rem;
+            font-size: 0.55rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.04em;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             background: #ede9fe;
             color: var(--linked);
         }
 
-        .result-actions {
+        .card-actions {
             display: flex;
             gap: 6px;
         }
 
-        .result-actions a,
-        .result-actions span {
+        .card-actions a,
+        .card-actions span {
             flex: 1;
             display: block;
-            padding: 9px 8px;
+            padding: 8px 10px;
             border-radius: 6px;
             font-family: 'Outfit', sans-serif;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             font-weight: 600;
             text-decoration: none;
             text-align: center;
             transition: all 0.15s;
+            cursor: pointer;
         }
 
-        .result-actions .btn-app {
+        .btn-app {
             background: var(--bg);
             color: var(--fg);
             border: 1px solid var(--subtle);
         }
+        .btn-app:hover { background: var(--fg); color: #fff; border-color: var(--fg); }
 
-        .result-actions .btn-app:hover {
-            background: var(--fg);
-            color: #fff;
-            border-color: var(--fg);
-        }
-
-        .result-actions .btn-anon {
+        .btn-anon {
             background: var(--accent);
             color: #fff;
             border: 1px solid var(--accent);
         }
+        .btn-anon:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
 
-        .result-actions .btn-anon:hover {
-            background: var(--accent-hover);
-            border-color: var(--accent-hover);
-        }
-
-        .result-actions .btn-disabled {
+        .btn-disabled {
             background: var(--bg);
             color: var(--notfound);
             border: 1px solid var(--subtle);
@@ -419,7 +408,66 @@
             pointer-events: none;
         }
 
-        .result-card.not-found { opacity: 0.45; }
+        .result-card.not-found { opacity: 0.4; }
+
+        /* --- VIEWER (in-site iframe) --- */
+        .viewer-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 1000;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(3px);
+            flex-direction: column;
+        }
+
+        .viewer-overlay.visible { display: flex; }
+
+        .viewer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--subtle);
+        }
+
+        .viewer-header .viewer-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--fg);
+        }
+
+        .viewer-header .viewer-close {
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--subtle);
+            background: var(--surface);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--fg);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .viewer-header .viewer-close:hover { background: var(--fg); color: #fff; }
+
+        .viewer-ad {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 90px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--subtle);
+        }
+
+        .viewer-frame {
+            flex: 1;
+            border: none;
+            width: 100%;
+        }
 
         /* --- LOADING --- */
         .loading { text-align: center; padding: 4rem 2rem; display: none; }
@@ -445,16 +493,13 @@
 
         .empty-state {
             text-align: center;
-            padding: 5rem 2rem;
+            padding: 4rem 2rem;
             color: var(--muted);
             font-size: 0.9rem;
             font-weight: 300;
         }
 
-        .variation-section {
-            margin-top: 2rem;
-        }
-
+        .variation-section { margin-top: 2rem; }
         .variation-section h3 {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.72rem;
@@ -472,50 +517,32 @@
             padding: 1.5rem 2rem;
             border-top: 1px solid var(--subtle);
             background: var(--surface);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
+            text-align: center;
+            margin-top: 3rem;
         }
 
-        .footer p {
-            font-size: 0.72rem;
-            color: var(--muted);
-        }
-
-        .footer .links {
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        .footer a {
-            font-size: 0.72rem;
-            color: var(--muted);
-            text-decoration: none;
-            transition: color 0.15s;
-        }
-
+        .footer p { font-size: 0.7rem; color: var(--muted); margin-bottom: 6px; }
+        .footer .links { display: flex; justify-content: center; gap: 1.5rem; }
+        .footer a { font-size: 0.7rem; color: var(--muted); text-decoration: none; }
         .footer a:hover { color: var(--accent); }
 
         /* --- MOBILE --- */
         @media (max-width: 768px) {
-            .hero { padding: 3rem 1.5rem 1rem; }
-            .hero h1 { font-size: 1.7rem; }
+            .hero { padding: 2.5rem 1.5rem 1rem; }
+            .hero h1 { font-size: 1.5rem; }
             .search-section { padding: 0 1rem; }
             .search-bar input { padding: 0.8rem 1rem; font-size: 0.85rem; }
             .search-bar button { padding: 0.8rem 1rem; font-size: 0.8rem; }
             .search-tabs button { padding: 5px 10px; font-size: 0.6rem; }
-            .sidebar { display: none; }
-            .main-layout { padding: 0 1rem; }
+            .results-area { padding: 0 0.75rem; }
             .results-grid { grid-template-columns: 1fr; }
-            .ad-slot-mobile { display: flex; }
-            .ad-slot { min-height: 60px; }
-            .footer { flex-direction: column; text-align: center; padding: 1.25rem 1.5rem; }
+            .ad-sticky-mobile { display: flex; }
+            .ad-slot-top { min-height: 50px; }
+            body { padding-bottom: 60px; }
         }
 
         @media (max-width: 400px) {
-            .hero h1 { font-size: 1.4rem; }
+            .hero h1 { font-size: 1.3rem; }
             .brand-name { font-size: 1.1rem; }
             .search-tabs { flex-wrap: wrap; gap: 4px; }
         }
@@ -524,7 +551,7 @@
 <body>
 
     <!-- Top Ad -->
-    <div class="ad-slot">
+    <div class="ad-slot ad-slot-top">
         <span class="ad-label">Advertisement</span>
     </div>
 
@@ -536,7 +563,7 @@
             </div>
             <span class="brand-name">SocialTrace</span>
         </div>
-        <h1>Find anyone across<br>social media</h1>
+        <h1>Find anyone across social media</h1>
         <p>Search once. See everywhere. Open in app or browse anonymously.</p>
     </div>
 
@@ -554,40 +581,21 @@
         </div>
     </div>
 
-    <!-- Mobile Ad -->
-    <div class="ad-slot ad-slot-mobile">
-        <span class="ad-label">Advertisement</span>
-    </div>
-
-    <!-- Main -->
-    <div class="main-layout">
-        <div class="sidebar">
-            <div class="ad-slot ad-slot-sidebar">
-                <span class="ad-label">Ad</span>
-            </div>
+    <!-- Results -->
+    <div class="results-area">
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p id="loadingText">Scanning platforms...</p>
         </div>
 
-        <div class="results-section">
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p id="loadingText">Scanning platforms...</p>
-            </div>
-
-            <div class="empty-state" id="emptyState">
-                Enter a username, name, email, or phone to find social profiles
-            </div>
-
-            <div id="resultsContainer"></div>
-
-            <div class="ad-slot ad-slot-mid" id="adMid">
-                <span class="ad-label">Advertisement</span>
-            </div>
+        <div class="empty-state" id="emptyState">
+            Enter a username, name, email, or phone to find social profiles
         </div>
 
-        <div class="sidebar">
-            <div class="ad-slot ad-slot-sidebar">
-                <span class="ad-label">Ad</span>
-            </div>
+        <div id="resultsContainer"></div>
+
+        <div class="ad-slot ad-slot-bottom" id="adBottom">
+            <span class="ad-label">Advertisement</span>
         </div>
     </div>
 
@@ -598,6 +606,23 @@
             <a href="/privacy.html">Privacy</a>
             <a href="/terms.html">Terms</a>
         </div>
+    </div>
+
+    <!-- Mobile sticky bottom ad -->
+    <div class="ad-slot ad-sticky-mobile">
+        <span class="ad-label">Advertisement</span>
+    </div>
+
+    <!-- Anonymous Viewer Overlay -->
+    <div class="viewer-overlay" id="viewerOverlay">
+        <div class="viewer-header">
+            <span class="viewer-title" id="viewerTitle">Viewing anonymously</span>
+            <button class="viewer-close" onclick="closeViewer()">Close</button>
+        </div>
+        <div class="viewer-ad ad-slot">
+            <span class="ad-label">Advertisement</span>
+        </div>
+        <iframe class="viewer-frame" id="viewerFrame" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
     </div>
 
     <script>
@@ -632,6 +657,19 @@
             },
         };
 
+        function openViewer(url, platform, username) {
+            document.getElementById('viewerTitle').textContent = `Viewing @${username} on ${platform} anonymously`;
+            document.getElementById('viewerFrame').src = url;
+            document.getElementById('viewerOverlay').classList.add('visible');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeViewer() {
+            document.getElementById('viewerOverlay').classList.remove('visible');
+            document.getElementById('viewerFrame').src = '';
+            document.body.style.overflow = '';
+        }
+
         function clientCheck(platform, username) {
             return new Promise((resolve) => {
                 const timer = setTimeout(() => resolve({ platform, username, found: false, fallback: true }), 5000);
@@ -652,7 +690,7 @@
             document.getElementById('mode' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('active');
             const placeholders = {
                 username: 'Enter @username...',
-                variations: 'Enter full name (e.g. Esther Tay)...',
+                variations: 'Enter full name (e.g. John Smith)...',
                 email: 'Enter email address...',
                 phone: 'Enter phone with country code...'
             };
@@ -677,20 +715,38 @@
             if (r.found && r.username) {
                 const appUrl = meta.appUrl.replace('{u}', r.username);
                 const anonUrl = meta.anonUrl.replace('{u}', r.username);
-                actions = `<div class="result-actions"><a href="${appUrl}" target="_blank" rel="noopener" class="btn-app">Open</a><a href="${anonUrl}" target="_blank" rel="noopener" class="btn-anon">Anonymous</a></div>`;
+                actions = `<div class="card-actions"><a href="${appUrl}" target="_blank" rel="noopener" class="btn-app">Open</a><a onclick="openViewer('${anonUrl}', '${meta.name}', '${r.username}')" class="btn-anon">Anonymous</a></div>`;
             } else if (r.found && !r.username) {
-                actions = `<div class="result-actions"><span class="btn-disabled">Account exists</span></div>`;
+                actions = `<div class="card-actions"><span class="btn-disabled">Exists</span></div>`;
             } else {
-                actions = `<div class="result-actions"><span class="btn-disabled">Unavailable</span></div>`;
+                actions = `<div class="card-actions"><span class="btn-disabled">Unavailable</span></div>`;
             }
 
             return `<div class="result-card ${cardExtra}"><div class="platform-header"><div class="platform-icon ${meta.iconClass}">${meta.icon}</div><div><div class="platform-name">${meta.name}</div><div class="platform-status ${statusClass}">${statusText}</div></div></div>${uname}${linkBadge}${note}${actions}</div>`;
+        }
+
+        function createInfeedAd() {
+            return `<div class="ad-slot ad-slot-infeed"><span class="ad-label">Advertisement</span></div>`;
         }
 
         async function safeJson(res) {
             const text = await res.text();
             try { return JSON.parse(text); }
             catch { throw new Error('Server returned an invalid response. Try again.'); }
+        }
+
+        function renderResults(results) {
+            const found = results.filter(r => r.found);
+            const notFound = results.filter(r => !r.found);
+            const sorted = [...found, ...notFound];
+
+            let items = [];
+            sorted.forEach((r, i) => {
+                items.push(createCard(r));
+                if (i === 1) items.push(createInfeedAd());
+            });
+
+            return `<div class="results-grid">${items.join('')}</div>`;
         }
 
         async function performSearch() {
@@ -701,11 +757,11 @@
             const loadingText = document.getElementById('loadingText');
             const emptyState = document.getElementById('emptyState');
             const container = document.getElementById('resultsContainer');
-            const adMid = document.getElementById('adMid');
+            const adBottom = document.getElementById('adBottom');
 
             emptyState.style.display = 'none';
             container.innerHTML = '';
-            adMid.classList.remove('visible');
+            adBottom.classList.remove('visible');
             loading.classList.add('visible');
 
             try {
@@ -738,52 +794,47 @@
                         else if (th) { th.linkNote = 'Same as Instagram'; }
                     }
 
+                    container.innerHTML = renderResults(results);
+
                 } else if (searchMode === 'variations') {
                     loadingText.textContent = 'Trying variations...';
                     const parts = input.toLowerCase().split(/\s+/);
                     const variations = [...new Set([parts.join(''), parts.join('.'), parts.join('_'), [...parts].reverse().join('')])];
 
                     let html = '';
-                    for (const v of variations) {
+                    for (let i = 0; i < variations.length; i++) {
+                        const v = variations[i];
                         const vRes = await fetch('/api/lookup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: v, platforms: ALL_PLATFORMS }) });
                         const vData = await safeJson(vRes);
                         const vResults = vData.results || [];
-                        const found = vResults.filter(r => r.found);
-                        const notFound = vResults.filter(r => !r.found);
-                        html += `<div class="variation-section"><h3>@${v}</h3><div class="results-grid">${[...found, ...notFound].map(createCard).join('')}</div></div>`;
+                        html += `<div class="variation-section"><h3>@${v}</h3>${renderResults(vResults)}</div>`;
+                        if (i === 0) html += createInfeedAd();
                     }
-
-                    loading.classList.remove('visible');
                     container.innerHTML = html;
-                    adMid.classList.add('visible');
-                    return;
 
                 } else if (searchMode === 'email') {
                     loadingText.textContent = 'Checking email...';
                     const res = await fetch('/api/lookup-email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: input }) });
                     const data = await safeJson(res);
-                    results = data.results || [];
+                    container.innerHTML = renderResults(data.results || []);
 
                 } else if (searchMode === 'phone') {
                     loadingText.textContent = 'Checking phone...';
                     const res = await fetch('/api/lookup-phone', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: input }) });
                     const data = await safeJson(res);
-                    results = data.results || [];
+                    container.innerHTML = renderResults(data.results || []);
                 }
-
-                const found = results.filter(r => r.found);
-                const notFound = results.filter(r => !r.found);
-                container.innerHTML = `<div class="results-grid">${[...found, ...notFound].map(createCard).join('')}</div>`;
 
             } catch (err) {
                 container.innerHTML = `<div class="empty-state" style="color:#ef4444;">${err.message}</div>`;
             }
 
             loading.classList.remove('visible');
-            adMid.classList.add('visible');
+            adBottom.classList.add('visible');
         }
 
         document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeViewer(); });
     </script>
 </body>
 </html>
