@@ -14,16 +14,16 @@
 
     <style>
         :root {
-            --bg: #f0fdf4;
+            --bg: #fafbfc;
             --surface: #ffffff;
-            --fg: #064e3b;
-            --muted: #4b7c6f;
-            --subtle: #d1fae5;
-            --accent: #10b981;
-            --accent-hover: #059669;
+            --fg: #111827;
+            --muted: #6b7280;
+            --subtle: #e5e7eb;
+            --accent: #0ea5e9;
+            --accent-hover: #0284c7;
             --found: #10b981;
-            --notfound: #a7f3d0;
-            --linked: #34d399;
+            --notfound: #d1d5db;
+            --linked: #8b5cf6;
             --radius: 6px;
         }
 
@@ -43,7 +43,7 @@
             content: '';
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-image: radial-gradient(circle, #6ee7b7 0.5px, transparent 0.5px);
+            background-image: radial-gradient(circle, #d1d5db 0.5px, transparent 0.5px);
             background-size: 24px 24px;
             opacity: 0.35;
             pointer-events: none;
@@ -164,7 +164,7 @@
 
         .search-bar:focus-within {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.08);
         }
 
         .search-bar input {
@@ -323,7 +323,7 @@
             font-weight: 600;
             text-transform: uppercase;
             margin-bottom: 8px;
-            background: #d1fae5;
+            background: #ede9fe;
             color: var(--linked);
         }
 

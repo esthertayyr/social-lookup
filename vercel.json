@@ -9,8 +9,10 @@
     { "src": "public/**", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/api/lookup", "dest": "/api/lookup.js" },
+    { "src": "/api/lookup-email", "dest": "/api/lookup-email.js" },
+    { "src": "/api/lookup-phone", "dest": "/api/lookup-phone.js" },
     { "src": "/(.*\\..+)$", "dest": "/public/$1" },
-    { "src": "/", "dest": "/public/index.html" }
+    { "src": "/(.*)", "dest": "/public/index.html" }
   ]
 }
