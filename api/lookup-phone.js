@@ -1,7 +1,7 @@
 async function checkPhoneOnInstagram(phone) {
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 7000);
+    const timeout = setTimeout(() => controller.abort(), 4000);
 
     const response = await fetch('https://www.instagram.com/accounts/web_create_ajax/attempt/', {
       method: 'POST',
@@ -34,26 +34,30 @@ async function checkPhoneOnInstagram(phone) {
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
 
-  const { phone } = req.body;
-  if (!phone || !phone.trim()) return res.status(400).json({ error: 'Phone required' });
+  try {
+    const { phone } = req.body || {};
+    if (!phone || !phone.trim()) return res.status(400).json({ error: 'Phone required' });
 
-  const results = await Promise.all([
-    checkPhoneOnInstagram(phone.trim()),
-  ]);
+    const results = await Promise.all([
+      checkPhoneOnInstagram(phone.trim()),
+    ]);
 
-  const ig = results[0];
-  results.push({
-    platform: 'threads',
-    found: ig.found,
-    method: 'phone',
-    note: ig.found ? 'Linked from Instagram (same Meta account)' : 'Threads uses Instagram login',
-    inferredFromLink: ig.found,
-    linkedFrom: ig.found ? 'instagram' : undefined,
-  });
+    const ig = results[0];
+    results.push({
+      platform: 'threads',
+      found: ig.found,
+      method: 'phone',
+      note: ig.found ? 'Linked from Instagram (same Meta account)' : 'Threads uses Instagram login',
+      inferredFromLink: ig.found,
+      linkedFrom: ig.found ? 'instagram' : undefined,
+    });
 
-  results.push({ platform: 'facebook', found: false, method: 'phone', note: 'Phone lookup restricted', unsupported: true });
-  results.push({ platform: 'twitter', found: false, method: 'phone', note: 'Phone lookup restricted', unsupported: true });
-  results.push({ platform: 'tiktok', found: false, method: 'phone', note: 'Phone lookup not available', unsupported: true });
+    results.push({ platform: 'facebook', found: false, method: 'phone', note: 'Phone lookup restricted', unsupported: true });
+    results.push({ platform: 'twitter', found: false, method: 'phone', note: 'Phone lookup restricted', unsupported: true });
+    results.push({ platform: 'tiktok', found: false, method: 'phone', note: 'Phone lookup not available', unsupported: true });
 
-  res.status(200).json({ query: phone.trim(), method: 'phone', results });
+    return res.status(200).json({ query: phone.trim(), method: 'phone', results });
+  } catch (err) {
+    return res.status(500).json({ error: 'Phone lookup failed', message: err.message });
+  }
 };

@@ -795,9 +795,17 @@
         }
 
         async function safeJson(res) {
+            if (!res.ok && res.status >= 500) {
+                throw new Error('Search timed out — platforms may be blocking requests. Results shown are partial.');
+            }
             const text = await res.text();
             try { return JSON.parse(text); }
-            catch { throw new Error('Server returned an invalid response. Try again.'); }
+            catch {
+                if (text.includes('<!') || text.includes('<html')) {
+                    throw new Error('Server is overloaded. Please wait a moment and try again.');
+                }
+                throw new Error('Unexpected server response. Try again.');
+            }
         }
 
         function renderResults(results) {

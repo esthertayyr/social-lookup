@@ -1,7 +1,7 @@
 async function checkEmailOnInstagram(email) {
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 7000);
+    const timeout = setTimeout(() => controller.abort(), 4000);
 
     const response = await fetch('https://www.instagram.com/accounts/web_create_ajax/attempt/', {
       method: 'POST',
@@ -34,7 +34,7 @@ async function checkEmailOnInstagram(email) {
 async function checkEmailOnTwitter(email) {
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 7000);
+    const timeout = setTimeout(() => controller.abort(), 4000);
 
     const response = await fetch(`https://api.twitter.com/i/users/email_available.json?email=${encodeURIComponent(email)}`, {
       signal: controller.signal,
@@ -67,7 +67,7 @@ async function checkEmailOnTwitter(email) {
 async function checkEmailOnFacebook(email) {
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 7000);
+    const timeout = setTimeout(() => controller.abort(), 4000);
 
     const response = await fetch('https://www.facebook.com/recover/initiate/?ars=facebook_login', {
       method: 'POST',
@@ -99,33 +99,37 @@ async function checkEmailOnFacebook(email) {
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
 
-  const { email } = req.body;
-  if (!email || !email.trim()) return res.status(400).json({ error: 'Email required' });
+  try {
+    const { email } = req.body || {};
+    if (!email || !email.trim()) return res.status(400).json({ error: 'Email required' });
 
-  const results = await Promise.all([
-    checkEmailOnInstagram(email.trim()),
-    checkEmailOnTwitter(email.trim()),
-    checkEmailOnFacebook(email.trim()),
-  ]);
+    const results = await Promise.all([
+      checkEmailOnInstagram(email.trim()),
+      checkEmailOnTwitter(email.trim()),
+      checkEmailOnFacebook(email.trim()),
+    ]);
 
-  // IG → Threads linking
-  const ig = results.find(r => r.platform === 'instagram' && r.found);
-  results.push({
-    platform: 'threads',
-    found: !!ig,
-    method: 'email',
-    note: ig ? 'Linked from Instagram (same Meta account)' : 'Threads uses Instagram login',
-    inferredFromLink: !!ig,
-    linkedFrom: ig ? 'instagram' : undefined,
-  });
+    // IG → Threads linking
+    const ig = results.find(r => r.platform === 'instagram' && r.found);
+    results.push({
+      platform: 'threads',
+      found: !!ig,
+      method: 'email',
+      note: ig ? 'Linked from Instagram (same Meta account)' : 'Threads uses Instagram login',
+      inferredFromLink: !!ig,
+      linkedFrom: ig ? 'instagram' : undefined,
+    });
 
-  results.push({
-    platform: 'tiktok',
-    found: false,
-    method: 'email',
-    note: 'TikTok does not expose email lookup',
-    unsupported: true,
-  });
+    results.push({
+      platform: 'tiktok',
+      found: false,
+      method: 'email',
+      note: 'TikTok does not expose email lookup',
+      unsupported: true,
+    });
 
-  res.status(200).json({ query: email.trim(), method: 'email', results });
+    return res.status(200).json({ query: email.trim(), method: 'email', results });
+  } catch (err) {
+    return res.status(500).json({ error: 'Email lookup failed', message: err.message });
+  }
 };
