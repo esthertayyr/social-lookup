@@ -1,8 +1,8 @@
 {
   "name": "social-lookup",
   "version": "1.0.0",
+  "private": true,
   "description": "Social media username lookup across platforms",
-  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js"
