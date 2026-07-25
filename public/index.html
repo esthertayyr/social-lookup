@@ -162,9 +162,10 @@
             transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        .search-bar:focus-within {
+        .search-bar:focus-within,
+        .search-bar.searching {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.08);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
         }
 
         .search-bar input {
@@ -378,124 +379,6 @@
         .platform-status.checking { color: var(--accent); }
         @keyframes pulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-        /* --- VIEWER OVERLAY --- */
-        .viewer-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            z-index: 1000;
-            background: var(--bg);
-            flex-direction: column;
-        }
-
-        .viewer-overlay.visible { display: flex; }
-
-        .viewer-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 14px;
-            background: var(--surface);
-            border-bottom: 1px solid var(--subtle);
-            flex-shrink: 0;
-        }
-
-        .viewer-title {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.68rem;
-            font-weight: 500;
-            color: var(--fg);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            flex: 1;
-            margin-right: 10px;
-        }
-
-        .viewer-actions {
-            display: flex;
-            gap: 6px;
-            flex-shrink: 0;
-        }
-
-        .viewer-actions button {
-            padding: 8px 14px;
-            border-radius: 6px;
-            border: 1px solid var(--subtle);
-            background: var(--surface);
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.72rem;
-            font-weight: 600;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-            transition: all 0.15s;
-        }
-
-        .viewer-actions .btn-new-tab {
-            color: var(--accent);
-            border-color: var(--accent);
-        }
-
-        .viewer-actions .btn-new-tab:active { background: var(--accent); color: #fff; }
-        .viewer-actions .btn-close { color: var(--fg); }
-        .viewer-actions .btn-close:active { background: var(--fg); color: #fff; }
-
-        .viewer-ad {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 60px;
-            background: var(--surface);
-            border-bottom: 1px solid var(--subtle);
-            flex-shrink: 0;
-        }
-
-        .viewer-body {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .viewer-frame {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .viewer-fallback {
-            display: none;
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            text-align: center;
-            background: var(--bg);
-        }
-
-        .viewer-fallback.visible { display: flex; }
-
-        .viewer-fallback p {
-            font-size: 0.9rem;
-            color: var(--muted);
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-
-        .viewer-fallback a {
-            display: inline-flex;
-            padding: 12px 24px;
-            border-radius: 8px;
-            background: var(--accent);
-            color: #fff;
-            font-weight: 600;
-            font-size: 0.85rem;
-            text-decoration: none;
-            transition: background 0.15s;
-        }
-
-        .viewer-fallback a:active { background: var(--accent-hover); }
 
         /* --- LOADING --- */
         .loading { text-align: center; padding: 3rem 2rem; display: none; }
@@ -628,114 +511,41 @@
         <span class="ad-label">Advertisement</span>
     </div>
 
-    <!-- Anonymous Viewer Overlay -->
-    <div class="viewer-overlay" id="viewerOverlay">
-        <div class="viewer-header">
-            <span class="viewer-title" id="viewerTitle">Viewing anonymously</span>
-            <div class="viewer-actions">
-                <button class="btn-new-tab" id="viewerNewTab" onclick="openInNewTab()">New Tab</button>
-                <button class="btn-close" onclick="closeViewer()">Close</button>
-            </div>
-        </div>
-        <div class="viewer-ad ad-slot">
-            <span class="ad-label">Advertisement</span>
-        </div>
-        <div class="viewer-body">
-            <iframe class="viewer-frame" id="viewerFrame" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
-            <div class="viewer-fallback" id="viewerFallback">
-                <p>This site can't be loaded in the viewer.<br>Open it in a new tab to browse anonymously.</p>
-                <a id="viewerFallbackLink" href="#" target="_blank" rel="noopener">Open in New Tab</a>
-            </div>
-        </div>
-    </div>
 
     <script>
         let searchMode = 'username';
-        let currentViewerUrl = '';
         const ALL_PLATFORMS = ['instagram', 'tiktok', 'twitter', 'facebook', 'threads'];
 
         const platformMeta = {
             instagram: {
                 name: 'Instagram', icon: 'IG', iconClass: 'instagram',
                 appUrl: 'https://www.instagram.com/{u}/',
-                anonUrl: 'https://imginn.com/{u}',
-                canEmbed: true,
+                anonUrl: 'https://www.picuki.com/profile/{u}',
             },
             tiktok: {
                 name: 'TikTok', icon: 'TT', iconClass: 'tiktok',
                 appUrl: 'https://www.tiktok.com/@{u}',
-                anonUrl: 'https://www.tiktok.com/@{u}',
-                canEmbed: false,
+                anonUrl: 'https://urlebird.com/user/{u}/',
             },
             twitter: {
                 name: 'X / Twitter', icon: 'X', iconClass: 'twitter',
                 appUrl: 'https://x.com/{u}',
-                anonUrl: 'https://nitter.net/{u}',
-                canEmbed: true,
+                anonUrl: 'https://xcancel.com/{u}',
             },
             facebook: {
                 name: 'Facebook', icon: 'FB', iconClass: 'facebook',
                 appUrl: 'https://www.facebook.com/{u}',
-                anonUrl: 'https://www.facebook.com/{u}',
-                canEmbed: false,
+                anonUrl: null,
             },
             threads: {
                 name: 'Threads', icon: 'TH', iconClass: 'threads',
                 appUrl: 'https://www.threads.net/@{u}',
-                anonUrl: 'https://www.threads.net/@{u}',
-                canEmbed: false,
+                anonUrl: null,
             },
         };
 
-        // --- Viewer ---
-        function openViewer(url, platform, username, canEmbed) {
-            currentViewerUrl = url;
-            document.getElementById('viewerTitle').textContent = `@${username} — ${platform}`;
-            document.getElementById('viewerNewTab').style.display = '';
-            document.getElementById('viewerFallbackLink').href = url;
-            document.getElementById('viewerFallback').classList.remove('visible');
-
-            if (canEmbed) {
-                const frame = document.getElementById('viewerFrame');
-                frame.style.display = 'block';
-                frame.src = url;
-
-                // Detect load failure after timeout
-                setTimeout(() => {
-                    try {
-                        const doc = frame.contentDocument || frame.contentWindow.document;
-                        if (!doc || !doc.body || doc.body.innerHTML.length < 100) {
-                            showFallback();
-                        }
-                    } catch (e) {
-                        // Cross-origin = loaded successfully (can't access content)
-                    }
-                }, 4000);
-            } else {
-                document.getElementById('viewerFrame').style.display = 'none';
-                showFallback();
-            }
-
-            document.getElementById('viewerOverlay').classList.add('visible');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function showFallback() {
-            document.getElementById('viewerFrame').style.display = 'none';
-            document.getElementById('viewerFallback').classList.add('visible');
-        }
-
-        function openInNewTab() {
-            window.open(currentViewerUrl, '_blank');
-        }
-
-        function closeViewer() {
-            document.getElementById('viewerOverlay').classList.remove('visible');
-            document.getElementById('viewerFrame').src = '';
-            document.getElementById('viewerFrame').style.display = 'block';
-            document.getElementById('viewerFallback').classList.remove('visible');
-            document.body.style.overflow = '';
-            currentViewerUrl = '';
+        function openAnon(url) {
+            window.open(url, '_blank');
         }
 
         // --- Search ---
@@ -783,11 +593,16 @@
             let actions;
             if (r.found && r.username) {
                 const appUrl = meta.appUrl.replace('{u}', r.username);
-                const anonUrl = meta.anonUrl.replace('{u}', r.username);
-                const canEmbed = meta.canEmbed;
-                actions = `<div class="card-actions"><a href="${appUrl}" target="_blank" rel="noopener" class="btn-app">Open</a><a onclick="openViewer('${anonUrl}','${meta.name}','${r.username}',${canEmbed})" class="btn-anon">Anonymous</a></div>`;
+                const anonUrl = meta.anonUrl ? meta.anonUrl.replace('{u}', r.username) : null;
+                actions = `<div class="card-actions"><a href="${appUrl}" target="_blank" rel="noopener" class="btn-app">Open</a>`;
+                if (anonUrl) {
+                    actions += `<a href="${anonUrl}" target="_blank" rel="noopener" class="btn-anon">Anonymous</a>`;
+                }
+                actions += `</div>`;
             } else if (r.found && !r.username) {
                 actions = `<div class="card-actions"><span class="btn-disabled">Exists</span></div>`;
+            } else if (r.checking) {
+                actions = `<div class="card-actions"><span class="btn-disabled">Checking...</span></div>`;
             } else {
                 actions = `<div class="card-actions"><span class="btn-disabled">Unavailable</span></div>`;
             }
@@ -839,6 +654,7 @@
             container.innerHTML = '';
             adBottom.classList.remove('visible');
             loading.classList.add('visible');
+            document.querySelector('.search-bar').classList.add('searching');
 
             try {
                 let results = [];
@@ -904,10 +720,10 @@
 
             loading.classList.remove('visible');
             adBottom.classList.add('visible');
+            document.querySelector('.search-bar').classList.remove('searching');
         }
 
         document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(); });
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeViewer(); });
     </script>
 </body>
 </html>
