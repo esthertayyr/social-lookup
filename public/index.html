@@ -373,6 +373,10 @@
         }
 
         .result-card.not-found { opacity: 0.4; }
+        .result-card.checking { opacity: 0.5; }
+        .result-card.checking::before { background: var(--accent); animation: pulse 1s infinite; }
+        .platform-status.checking { color: var(--accent); }
+        @keyframes pulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
 
         /* --- VIEWER OVERLAY --- */
         .viewer-overlay {
@@ -766,7 +770,8 @@
             const meta = platformMeta[r.platform];
             let statusClass = 'not-found', statusText = 'Not found', cardExtra = 'not-found';
 
-            if (r.unsupported) { statusClass = 'unsupported'; statusText = 'Unavailable'; }
+            if (r.checking) { statusClass = 'checking'; statusText = 'Checking...'; cardExtra = 'checking'; }
+            else if (r.unsupported) { statusClass = 'unsupported'; statusText = 'Unavailable'; }
             else if (r.inferredFromLink) { statusClass = 'linked'; statusText = 'Linked'; cardExtra = 'linked'; }
             else if (r.found) { statusClass = 'found'; statusText = 'Found'; cardExtra = 'found'; }
 
@@ -839,33 +844,31 @@
                 let results = [];
 
                 if (searchMode === 'username') {
-                    loadingText.textContent = 'Scanning platforms...';
                     const clean = input.replace(/^@/, '').toLowerCase();
-
-                    const clientResults = await Promise.all(ALL_PLATFORMS.map(p => clientCheck(p, clean)));
-                    const needServer = clientResults.filter(r => r.fallback).map(r => r.platform);
-
-                    let serverResults = [];
-                    if (needServer.length > 0) {
-                        const res = await fetch('/api/lookup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: clean, platforms: needServer }) });
-                        const data = await safeJson(res);
-                        serverResults = data.results || [];
-                    }
-
-                    results = ALL_PLATFORMS.map(p => {
-                        const c = clientResults.find(r => r.platform === p);
-                        if (c && !c.fallback) return c;
-                        return serverResults.find(r => r.platform === p) || c;
-                    });
-
-                    const ig = results.find(r => r.platform === 'instagram' && r.found);
-                    if (ig) {
-                        const th = results.find(r => r.platform === 'threads');
-                        if (th && !th.found) { th.found = true; th.inferredFromLink = true; th.linkedFrom = 'instagram'; }
-                        else if (th) { th.linkNote = 'Same as Instagram'; }
-                    }
-
+                    results = ALL_PLATFORMS.map(p => ({ platform: p, username: clean, found: false, url: '', checking: true }));
                     container.innerHTML = renderResults(results);
+                    loading.classList.remove('visible');
+
+                    for (let i = 0; i < ALL_PLATFORMS.length; i++) {
+                        const p = ALL_PLATFORMS[i];
+                        loadingText.textContent = `Checking ${platformMeta[p].name}...`;
+                        try {
+                            const res = await fetch('/api/lookup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: clean, platforms: [p] }) });
+                            const data = await safeJson(res);
+                            const r = (data.results || [])[0];
+                            if (r) results[i] = r;
+                            else results[i] = { platform: p, username: clean, found: false, url: '' };
+                        } catch {
+                            results[i] = { platform: p, username: clean, found: false, url: '', note: 'Could not check' };
+                        }
+                        // IG → Threads linking
+                        const ig = results.find(r => r.platform === 'instagram' && r.found);
+                        if (ig) {
+                            const th = results.find(r => r.platform === 'threads');
+                            if (th && !th.found && !th.checking) { th.found = true; th.inferredFromLink = true; th.linkedFrom = 'instagram'; }
+                        }
+                        container.innerHTML = renderResults(results);
+                    }
 
                 } else if (searchMode === 'variations') {
                     loadingText.textContent = 'Trying variations...';
